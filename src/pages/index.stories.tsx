@@ -15,6 +15,6 @@ const Template: ComponentStory<typeof IndexPage> = (args : any) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {
-};
+
+Default.args = {};
 
