@@ -12,7 +12,7 @@ interface NavBarItemProps {
 }
 
 const NavBarItem = ({ active, children, ...props  } : NavBarItemProps) => (
-  <div className={`${active ? "text-base text-black-400 underline" : "text-base text-gray-600"} cursor-pointer text-center`} {...props}>{children}</div>
+  <div className={`${active ? "text-base text-black-400 underline" : "text-base text-gray-400"} cursor-pointer text-center hover:text-gray-800`} {...props}>{children}</div>
 );
 
 interface NavBarProps {
@@ -40,28 +40,26 @@ export const NavBar = (props : NavBarProps) => {
   };
 
   return (
-    <div className="">
-      <div className="grid grid-cols-[48px_48px_auto_70px] lg:grid-cols-[96px_96px_auto_70px] px-4 items-center h-[72px]">
-        {leftItems.map((item) =>
-          <NavBarItem
-            key={item.label}
-            active={item.active}
-            onClick={() => onSelectItem(item)}
-          >{item.label}</NavBarItem>)}
+    <div className="grid grid-cols-[48px_48px_auto_70px] lg:grid-cols-[96px_96px_auto_70px] items-center h-[72px] mx-4">
+      {leftItems.map((item) =>
+        <NavBarItem
+          key={item.label}
+          active={item.active}
+          onClick={() => onSelectItem(item)}
+        >{item.label}</NavBarItem>)}
 
-        <div className="inline-block w-full"/>
+      <div className="inline-block w-full"/>
 
-        <div className="inline-grid grid-cols-1 gap-6">
-          {/*
-            TODO: Switch layout feature
-            <Image src="/assets/mosaic.svg" width="28px" height="28px" />
-          */}
-          <NavBarItemMenu right menu={[
-            { label: "About us", url: "/about" }
-          ]}>
-            <Image src="/assets/more-horizontal.svg" width="28px" height="28px" />
-          </NavBarItemMenu>
-        </div>
+      <div className="inline-grid grid-cols-1 gap-6">
+        {/*
+          TODO: Switch layout feature
+          <Image src="/assets/mosaic.svg" width="28px" height="28px" />
+        */}
+        <NavBarItemMenu right menu={[
+          { label: "About us", url: "/about" }
+        ]}>
+          <Image src="/assets/more-horizontal.svg" width="28px" height="28px" />
+        </NavBarItemMenu>
       </div>
     </div>
   );
