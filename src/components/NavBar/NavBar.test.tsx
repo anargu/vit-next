@@ -1,19 +1,18 @@
 import { act, fireEvent, render } from "@testing-library/react";
-import {NavBar} from "./NavBar";
+import {NavBar, FEED_LABEL, SAVED_LABEL} from "./NavBar";
 
 describe("NavBar", () => {
 
-  const FEED_LABEL = "Feed";
-  const SAVED_LABEL = "Saved";
-
   it("should have two items on the left side", () => {
-    const { getByText } = render(<NavBar/>);
+    const { container, getByText } = render(<NavBar/>);
     
     const feedLabel = getByText(FEED_LABEL);
     const savedLabel = getByText(SAVED_LABEL);
 
     expect(feedLabel).not.toBeFalsy();
     expect(savedLabel).not.toBeFalsy();
+
+    expect(container).toMatchSnapshot();
   });
 
   it("has Feed Item active by default", () => {
@@ -24,15 +23,8 @@ describe("NavBar", () => {
     expect(feedLabel).toHaveClass("text-black-400");
   });
 
-  it("set active when clicked on inactive item", async () => {
+  it("set Saved Tab active when clicked", async () => {
     const { getByText } = render(<NavBar/>);
-
-    const savedLabel = getByText(SAVED_LABEL);
-
-    act(() => { fireEvent.click(savedLabel); });
-
-    expect(savedLabel.className).toContain("text-black");
-
 
     const feedLabel = getByText(FEED_LABEL);
 
@@ -40,4 +32,24 @@ describe("NavBar", () => {
 
     expect(feedLabel.className).toContain("text-black");
   });
+
+  it("set Saved Tab active when clicked", async () => {
+    const { getByText } = render(<NavBar/>);
+
+    const savedLabel = getByText(SAVED_LABEL);
+
+    act(() => { fireEvent.click(savedLabel); });
+
+    expect(savedLabel.className).toContain("text-black");
+  });
+
+  it("has icon menus on the right side", async () => {
+    const { container } = render(<NavBar/>);
+
+    // look for next/image component
+    const items = container.firstElementChild!.querySelectorAll("span > span > img");
+
+    expect(items.length).toBeGreaterThan(0);
+  });
 });
+
