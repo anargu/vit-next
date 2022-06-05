@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IResourceRepository } from "src/core/IResourceRepository";
 
 export const executeSearch = async (
@@ -10,6 +10,10 @@ export const executeSearch = async (
     }
 };
 
+interface SearchBarProps {
+  onNewSearch?: (term : string) => void,
+}
+
 const SearchIcon = () => (
   // style="enable-background:new 0 0 56.966 56.966;"
   <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -20,13 +24,22 @@ const SearchIcon = () => (
   </svg>
 );
 
-export const SearchBar = () => {
+export const SearchBar = (props : SearchBarProps) => {
+  const [term, setTerm] = useState("");
+
   return (
     <div className="relative text-gray-600">
-      <input type="search" name="serch" placeholder="Search" className="w-full bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none" />
-      <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
-        <SearchIcon />
-      </button>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        props.onNewSearch?.(term);
+      }}>
+        <input
+          type="search" name="search" placeholder="Search" onChange={(ev) => { setTerm(ev.target.value) }}
+          className="w-full bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none" />
+        <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
+          <SearchIcon />
+        </button>
+      </form>
     </div>
   );
 };
