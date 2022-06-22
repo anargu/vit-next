@@ -15,18 +15,21 @@ body {
 
 .ais-SearchBox {
   display: inline-block;
-  max-width: 400px
+  width: 100%;
+  /* max-width: 400px; */
 }
 .ais-SearchBox-form {
   border-bottom: 2px solid black;
   display: flex;
+  width: 100%;
 }
 .ais-SearchBox-input {
   padding: 0.5rem 0;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-family: 'Merriweather', serif;
   outline: none;
-  max-width: 200px;
+  /* max-width: 200px; */
+  width: 100%;
 }
 
 .ais-SearchBox-input[type="search"]::-webkit-search-decoration,
