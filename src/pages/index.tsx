@@ -16,11 +16,8 @@ export const IndexPage = () => {
           VIT, a curated feed of tons of interesting articles, news, tutorials... things.
         </div>
 
-        {/*
-
-<MeiliSearchBar></MeiliSearchBar>
-        */}
-        <SearchBar onNewSearch={() => router.push("/feed")} />
+        <MeiliSearchBar></MeiliSearchBar>
+        {/* <SearchBar onNewSearch={() => router.push("/feed")} /> */}
 
 
         <div className="">

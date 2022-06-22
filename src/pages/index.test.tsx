@@ -1,7 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react'
-import { InMemoryRepository } from "../core/InMemoryRepository";
-import { executeSearch } from "../components/SearchBar";
+import { render } from '@testing-library/react'
 import { IndexPage } from "../pages/index";
+import { mockMeiliSearchComponent } from '../components/MeiliSearch.mocks';
+
+jest.mock("../components/MeiliSearch", () => ({
+  __esModule: true,
+  MeiliSearchBar: () => mockMeiliSearchComponent.MeiliSearchBar,
+}));
 
 const IndexTitle = `VIT, a curated feed of tons of interesting articles, news, tutorials... things.`;
 
