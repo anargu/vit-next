@@ -2,6 +2,7 @@ import React from 'react';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
 import { Hit } from 'react-instantsearch-core';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
+import { VITResource } from './ResourceCard/ResourceCard';
 
 const searchClient = instantMeiliSearch(
   "https://integration-demos.meilisearch.com",
@@ -10,12 +11,6 @@ const searchClient = instantMeiliSearch(
     primaryKey: "id",
   }
 );
-
-// const Hit = ({ hit } : any) => <Highlight attribute="name" hit={hit} />;
-
-type VITResource = {
-
-};
 
 type MeiliSearchBarProps = {
   ResultHitCard: React.ComponentType<{ hit: Hit<VITResource> }>,
