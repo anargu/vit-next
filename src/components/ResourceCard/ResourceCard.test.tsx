@@ -31,7 +31,7 @@ describe("ResourceCard", () => {
 
   describe("field postedAt", () => {
 
-    const patternPostedAt = /\d+\s(m|h|hours?|days?|months?|years?)\sago/g;
+    const patternPostedAt = /\d+\s(m|h|hours?|days?|months?|years?)\sago/;
 
     it("displays \"now\" when postedAt diff with current time is lower than a minute", async () => {
       const { findByText } = render(<ResourceCard hit={mockedResource} />);
@@ -47,9 +47,7 @@ describe("ResourceCard", () => {
       
       mockedResource.postedAt = yesterday;
 
-      const { debug, findByText } = render(<ResourceCard hit={mockedResource} />);
-
-      debug();
+      const { findByText } = render(<ResourceCard hit={mockedResource} />);
 
       const postedAtElement = await findByText(patternPostedAt);
 

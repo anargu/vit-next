@@ -38,7 +38,7 @@ export const computeTime = (diffTimeMillis : number) : string => {
 export const ResourceCard = ({ hit : data } : ResourceCardProps) => {
 
   const postedAt = useMemo(() => {
-    if (typeof data.postedAt === "string") return "_";
+    if (typeof data.postedAt === "string") return "";
 
     const now = new Date();
 
