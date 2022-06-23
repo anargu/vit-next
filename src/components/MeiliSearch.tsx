@@ -1,5 +1,6 @@
 import React from 'react';
-import { InstantSearch, SearchBox, Hits, Highlight } from 'react-instantsearch-dom';
+import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import { Hit } from 'react-instantsearch-core';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 
 const searchClient = instantMeiliSearch(
@@ -10,16 +11,24 @@ const searchClient = instantMeiliSearch(
   }
 );
 
-const Hit = ({ hit } : any) => <Highlight attribute="name" hit={hit} />;
+// const Hit = ({ hit } : any) => <Highlight attribute="name" hit={hit} />;
 
-export const MeiliSearchBar = () => (
+type VITResource = {
+
+};
+
+type MeiliSearchBarProps = {
+  ResultHitCard: React.ComponentType<{ hit: Hit<VITResource> }>,
+};
+
+export const MeiliSearchBar = ({ ResultHitCard } : MeiliSearchBarProps) => (
   <div>
     <InstantSearch
       indexName="steam-video-games"
       searchClient={searchClient}
     >
       <SearchBox />
-      <Hits hitComponent={Hit} />
+      <Hits hitComponent={ResultHitCard} />
     </InstantSearch>
   </div>
 );
