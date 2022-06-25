@@ -1,15 +1,17 @@
+import { SinceDatetimeField, Resource } from "@/src/core/entities";
 import { render } from "@testing-library/react";
-import { computeTime, ONE_DAY_IN_MILLIS, ResourceCard, VITResource } from "./ResourceCard";
+import { ResourceCard } from "./ResourceCard";
 
 describe("ResourceCard", () => {
 
-  const mockedResource : VITResource = {
+  const mockedResource : Resource = new Resource({
+    id: "",
     imageSrc: "https://source.unsplash.com/random/50x50",
     imageAlt: "man holding a beer",
     postedAt: new Date(),
     title: "Inter Link",
     description: "This is a link, interlinked",
-  };
+  });
 
   it("displays an image", async  () => {
     const { findByAltText } = render(<ResourceCard hit={mockedResource} />);
