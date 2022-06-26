@@ -13,6 +13,11 @@ describe("ResourceCard", () => {
     description: "This is a link, interlinked",
   });
 
+  it("renders ", async  () => {
+    const { container } = render(<ResourceCard hit={mockedResource} />);
+    expect(container).toMatchSnapshot();
+  });
+
   it("displays an image", async  () => {
     const { findByAltText } = render(<ResourceCard hit={mockedResource} />);
 
