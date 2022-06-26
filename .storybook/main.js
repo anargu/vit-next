@@ -29,4 +29,7 @@ module.exports = {
     config.resolve.alias["next/image"] = require.resolve("./NextImage.js");
     return config;
   },
-}
+};
+
+// References
+// https://github.com/storybookjs/storybook/issues/17950
