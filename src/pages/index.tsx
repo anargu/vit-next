@@ -3,6 +3,7 @@ import React from 'react';
 import NavBar from '../components/NavBar';
 import { SearchBar } from '../components/SearchBar';
 import { MeiliSearchBar } from '../components/MeiliSearch';
+import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 
 export const IndexPage = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ export const IndexPage = () => {
           VIT, a curated feed of tons of interesting articles, news, tutorials... things.
         </div>
 
-        <MeiliSearchBar></MeiliSearchBar>
+        <MeiliSearchBar ResultHitCard={ResourceCard}></MeiliSearchBar>
         {/* <SearchBar onNewSearch={() => router.push("/feed")} /> */}
 
 
