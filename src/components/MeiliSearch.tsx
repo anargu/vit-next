@@ -1,13 +1,13 @@
 import React from 'react';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import { InstantSearch, SearchBox, Hits, Highlight } from 'react-instantsearch-dom';
 import { Hit } from 'react-instantsearch-core';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { VITResource } from '../core/entities';
 
 
 const searchClient = instantMeiliSearch(
-  "https://integration-demos.meilisearch.com",
-  "q7QHwGiX841a509c8b05ef29e55f2d94c02c00635f729ccf097a734cbdf7961530f47c47",
+  process.env.MEILISEARCH_HOST_URL || "",
+  process.env.MEILISEARCH_API_KEY ,
   {
     primaryKey: "id",
   }
@@ -17,10 +17,12 @@ type MeiliSearchBarProps = {
   ResultHitCard: React.ComponentType<{ hit: Hit<VITResource> }>,
 };
 
-export const MeiliSearchBar = ({ ResultHitCard } : MeiliSearchBarProps) => (
+export const MeiliSearchBar = (
+  { ResultHitCard } : MeiliSearchBarProps
+) => (
   <div>
     <InstantSearch
-      indexName="steam-video-games"
+      indexName="resources"
       searchClient={searchClient}
     >
       <SearchBox />
