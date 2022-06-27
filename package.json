@@ -13,7 +13,7 @@
     "styled-components": "^5"
   },
   "dependencies": {
-    "@meilisearch/instant-meilisearch": "^0.7.1",
+    "@meilisearch/instant-meilisearch": "0.7.0",
     "next": "latest",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
