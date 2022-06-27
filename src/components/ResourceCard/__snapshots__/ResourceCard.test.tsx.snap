@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResourceCard renders the component 1`] = `
+<div>
+  <div
+    class="relative py-4 px-4 text-white h-full"
+  >
+    <div
+      class="absolute top-0 right-0 bottom-0 left-0 bg-indigo-900/30 z-20"
+    />
+    <div
+      class="absolute top-0 right-0 bottom-0 left-0 z-10"
+    >
+      <span
+        style="box-sizing: border-box; display: block; overflow: hidden; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"
+      >
+        <img
+          alt="man holding a beer"
+          data-nimg="fill"
+          decoding="async"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; box-sizing: border-box; padding: 0px; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"
+        />
+        <noscript />
+      </span>
+    </div>
+    <div
+      class="relative z-30 h-full grid grid-rows-[min-content_2fr_1fr_36px] gap-5"
+    >
+      <div
+        class="text-right"
+      >
+        <span>
+          3 months ago
+        </span>
+      </div>
+      <p
+        class="py-0 max-h-[calc(2.5rem*4)]
+          text-4xl text-multiline-overflow-mixin
+          text-ellipsis [-webkit-line-clamp:4]"
+      >
+        Inter Link
+      </p>
+      <p
+        class="self-center max-h-[calc(2rem*4)] text-2xl text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]"
+      >
+        This is a link, interlinked
+      </p>
+      <div
+        class="sc-bczRLJ hMlQFb flex justify-around"
+      >
+        <svg />
+        <svg />
+        <svg />
+      </div>
+    </div>
+  </div>
+</div>
+`;
