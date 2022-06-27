@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ResourceCard, ResourceCardProps } from "./ResourceCard";
 
 import { faker } from "@faker-js/faker";
+import { VITResource } from '@/src/core/entities';
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'UI/ResourceCard',
@@ -18,13 +19,13 @@ const Template: ComponentStory<typeof ResourceCard> = (args : ResourceCardProps)
   <div className="bg-gray-100 w-[300px] h-[400px]"><ResourceCard {...args} /></div>
 );
 
-const mockHitData = () => ({
+const mockHitData = () : VITResource => ({
     id: faker.datatype.uuid(),
-    imageSrc: "https://source.unsplash.com/random/50x50",
-    imageAlt: "man holding a beer",
-    postedAt: new Date(),
-    title: "Inter Link",
-    description: "This is a link, interlinked",
+    og_image: "https://source.unsplash.com/random/50x50",
+    keyphrase: "man holding a beer",
+    date_created: faker.datatype.datetime().toISOString(),
+    og_title: "Inter Link",
+    og_description: "This is a link, interlinked",
 });
 
 export const Default = Template.bind({});
@@ -38,9 +39,9 @@ export const LongText = Template.bind({});
 LongText.args = {
   hit: {
     ...mockHitData(),
-    imageAlt: faker.lorem.text(),
-    title: faker.lorem.paragraph(2),
-    description: faker.lorem.paragraphs(4),
+    og_image: faker.lorem.text(),
+    og_title: faker.lorem.paragraph(2),
+    og_description: faker.lorem.paragraphs(4),
   }
 };
 
@@ -53,9 +54,9 @@ export const FluidLayout = FluidTemplate.bind({});
 FluidLayout.args = {
   hit: {
     ...mockHitData(),
-    imageAlt: faker.lorem.text(),
-    title: faker.lorem.paragraph(2),
-    description: faker.lorem.paragraphs(4),
+    og_image: faker.lorem.text(),
+    og_title: faker.lorem.paragraph(2),
+    og_description: faker.lorem.paragraphs(4),
   }
 };
 

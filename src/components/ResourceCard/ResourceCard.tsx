@@ -16,11 +16,13 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
 
   return (
     <div className="relative py-4 px-4 text-white h-full">
-      <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/60 z-20">
-      </div>
-      <div className="absolute top-0 right-0 bottom-0 left-0 z-10">
-        <Image src={resourceData.imageSrc} alt={resourceData.imageAlt} layout="fill"/>
-      </div>
+      <div className="absolute top-0 right-0 bottom-0 left-0 bg-indigo-900/30 z-20" />
+
+      {resourceData.imageSrc && (
+        <div className="absolute top-0 right-0 bottom-0 left-0 z-10">
+          <Image src={resourceData.imageSrc || ""} alt={resourceData.imageAlt || ""} layout="fill"/>
+        </div>
+      )}
 
       <div className="relative z-30 h-full grid grid-rows-[min-content_2fr_1fr_36px] gap-5">
         <div className="text-right"><span>{resourceData.timeAgo.toString()}</span></div>

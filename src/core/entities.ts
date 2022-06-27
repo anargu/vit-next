@@ -1,34 +1,33 @@
 import { ONE_DAY_IN_MILLIS, ONE_HOUR_IN_MILLIS, ONE_MINUTE_IN_MILLIS, ONE_MONTH_IN_MILLIS } from "./constants";
 
-export interface Resource {
-  id: string;
-}
-
 export interface VITResource {
   id: string;
-  imageSrc : string,
-  imageAlt : string,
-  postedAt : Date | string,
-  title : string,
-  description : string,
+  og_image : string | null,
+  keyphrase : string | null,
+  date_created : string,
+  og_title : string | null,
+  og_description : string | null,
+  url_title: string | null,
+  url: string | null,
 };
 
 export class Resource {
 
   id : string;
-  imageSrc : string;
-  imageAlt : string;
-  postedAt : string | Date;
-  title : string;
-  description : string;
+  imageSrc : string | null;
+  imageAlt : string | null;
+  postedAt : Date;
+  title : string | null;
+  description : string | null;
 
-  constructor({ id, imageSrc, imageAlt, postedAt, title, description} : VITResource) {
+  constructor({ id, og_image, keyphrase, date_created, og_title, url_title, og_description, url } : VITResource) {
     this.id = id;
-    this.imageSrc = imageSrc;
-    this.imageAlt = imageAlt;
-    this.postedAt = postedAt;
-    this.title = title;
-    this.description = description;
+    this.imageSrc = og_image;
+    this.imageAlt = keyphrase;
+    // Input date_created is in ISO 8601 date format/
+    this.postedAt = new Date(date_created);
+    this.title = og_title ?? url_title ?? url;
+    this.description = og_description;
   }
 
   get timeAgo() : SinceDatetimeField {
@@ -44,15 +43,15 @@ export class SinceDatetimeField {
 
   value : string;
 
-  constructor(date : Date | string) {
-    if (typeof date === "string") {
+  constructor(date : Date | string | null) {
+    if (typeof date === "string" || date === null) {
       this.value = "";
       return;
     } 
 
     const now = new Date();
 
-    const diffTimeMillis = now.getTime() - date.getTime();
+    const diffTimeMillis = now.getTime() - date?.getTime();
 
     this.value = this.computeTime(diffTimeMillis);
   }
