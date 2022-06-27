@@ -2,7 +2,8 @@ import React from 'react';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
 import { Hit } from 'react-instantsearch-core';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
-import { VITResource } from './ResourceCard/ResourceCard';
+import { VITResource } from '../core/entities';
+
 
 const searchClient = instantMeiliSearch(
   "https://integration-demos.meilisearch.com",
