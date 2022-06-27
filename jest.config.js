@@ -15,6 +15,8 @@ const customJestConfig = {
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
 
     '^@/src/(.*)$': '<rootDir>/src/$1',
+
+    '\\.svg$': '<rootDir>/__mocks__/svg.js',
   },
   testEnvironment: 'jest-environment-jsdom',
 }
