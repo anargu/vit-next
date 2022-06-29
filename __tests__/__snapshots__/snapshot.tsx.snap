@@ -71,10 +71,10 @@ exports[`renders homepage unchanged 1`] = `
       </div>
     </div>
     <div
-      class="grid grid-rows-[360px_min-content] mx-6 min-h-[calc(100vh-72px)]"
+      class="grid grid-rows-[360px_min-content] min-h-[calc(100vh-72px)]"
     >
       <div
-        class="text-stone-900 leading-tight text-4xl max-w-[80%]"
+        class="text-stone-900 leading-tight text-4xl max-w-[80%] mx-6"
       >
         VIT, a curated feed of tons of interesting articles, news, tutorials... things.
       </div>

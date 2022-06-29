@@ -15,17 +15,19 @@ const searchClient = instantMeiliSearch(
 
 type MeiliSearchBarProps = {
   ResultHitCard: React.ComponentType<{ hit: Hit<VITResource> }>,
+  searchBarWrapperClassName?: string,
 };
 
 export const MeiliSearchBar = (
-  { ResultHitCard } : MeiliSearchBarProps
+  { ResultHitCard, searchBarWrapperClassName } : MeiliSearchBarProps
 ) => (
   <div>
     <InstantSearch
       indexName="resources"
       searchClient={searchClient}
     >
-      <SearchBox />
+      <div className={`${searchBarWrapperClassName || "mx-6"}`}><SearchBox /></div>
+      
       <Hits hitComponent={ResultHitCard} />
     </InstantSearch>
   </div>
