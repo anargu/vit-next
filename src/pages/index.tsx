@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import NavBar from '../components/NavBar';
-import { SearchBar } from '../components/SearchBar';
 import { MeiliSearchBar } from '../components/MeiliSearch';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 
@@ -18,13 +17,6 @@ export const IndexPage = () => {
         </div>
 
         <MeiliSearchBar ResultHitCard={ResourceCard}></MeiliSearchBar>
-        {/* <SearchBar onNewSearch={() => router.push("/feed")} /> */}
-
-
-        <div className="">
-          <div className="bg-gray-800 w-[100%] h-[400px]">title A</div>
-          <div className="bg-gray-800 w-[100%] h-[400px]"></div>
-        </div>
       </div>
     </>
   );
