@@ -1,6 +1,8 @@
 import { VITResource } from "@/src/core/entities";
 import { faker } from "@faker-js/faker";
-import { render } from "@testing-library/react";
+import { MantineProvider } from "@mantine/core";
+import { act, render } from "@testing-library/react";
+import { WithNotificationsProvider } from "../Notification/Notification";
 import { ResourceCard, SAVED_LINK_KEY } from "./ResourceCard";
 
 faker.seed(1);
@@ -128,22 +130,54 @@ describe("ResourceCard", () => {
         const oldPost = mockedResource();
         localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([oldPost]));
 
+        const newPost = mockedResource();
+        const { findByTitle, findByText } = render(
+          <MantineProvider>
+            <WithNotificationsProvider>
+              <ResourceCard hit={newPost} />
+            </WithNotificationsProvider>
+          </MantineProvider>
+        );
+
+        await act(async () => {
+          const saveButtonEl = await findByTitle("Save Button");
+          saveButtonEl.click();
+        });
+
+        await findByText("Link saved locally.");
+        const value = localStorage.getItem(SAVED_LINK_KEY);
+        expect(value).not.toBeFalsy();
+        expect(value).not.toBeNull();
+
+        const actualSavedPosts = JSON.parse(value!)
+        expect(actualSavedPosts).toHaveLength(2);
+        expect(actualSavedPosts[0]).toStrictEqual(oldPost);
+        expect(actualSavedPosts[1]).toStrictEqual(newPost);
       });
 
       it("post is saved on empty local storage when save button is clicked ", async () => {
-        localStorage.setItem(SAVED_LINK_KEY, "");
-        const { findByTitle, findByText } = render(<ResourceCard hit={mockedResource()} />);
+        localStorage.removeItem(SAVED_LINK_KEY);
 
-        const saveButtonEl = await findByTitle("Save Button");
-        saveButtonEl.click();
+        const { findByTitle, findByText } = render(
+          <MantineProvider>
+            <WithNotificationsProvider>
+              <ResourceCard hit={mockedResource()} />
+            </WithNotificationsProvider>
+          </MantineProvider>
+        );
 
-        await findByText("Link saved");
+        await act(async () => {
+          const saveButtonEl = await findByTitle("Save Button");
+          saveButtonEl.click();
+        });
+
+        await findByText("Link saved locally.");
         const value = localStorage.getItem(SAVED_LINK_KEY);
         expect(value).not.toBeFalsy();
       });
 
       afterEach(() => {
-        localStorage.setItem(SAVED_LINK_KEY, "");
+        localStorage.removeItem(SAVED_LINK_KEY);
       });
     });
 

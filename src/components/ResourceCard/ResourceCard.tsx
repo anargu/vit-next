@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Link from "../../../public/assets/link.svg";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Share from "../../../public/assets/share.svg";
+import { showDefaultNotification } from "../Notification/Notification";
 
 export type ResourceCardProps = {
   hit: VITResource,
@@ -17,8 +18,10 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
 
   const onSaveClicked = () => {
-    localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([hit]));
+    const prevList = JSON.parse(localStorage.getItem(SAVED_LINK_KEY)!) || [];
+    localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([...prevList, hit]));
 
+    showDefaultNotification("Link saved locally.");
   };
 
   const onCopyLinkClicked = () => {};
