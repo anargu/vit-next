@@ -13,6 +13,9 @@
     "styled-components": "^5"
   },
   "dependencies": {
+    "@mantine/core": "^4.2.11",
+    "@mantine/hooks": "^4.2.11",
+    "@mantine/notifications": "^4.2.11",
     "@meilisearch/instant-meilisearch": "0.7.0",
     "next": "latest",
     "react": "^18.1.0",
