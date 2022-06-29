@@ -1,2 +1,2 @@
-export default () => (<svg></svg>)
+export default (props) => (<svg {...props}></svg>)
 

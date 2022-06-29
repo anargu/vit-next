@@ -1,20 +1,23 @@
 import { VITResource } from "@/src/core/entities";
+import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
-import { ResourceCard } from "./ResourceCard";
+import { ResourceCard, SAVED_LINK_KEY } from "./ResourceCard";
+
+faker.seed(1);
 
 export const patternPostedAt = /\d+\s(m|h|hours?|days?|months?|years?)\sago/;
 
 describe("ResourceCard", () => {
 
   const mockedResource = () : VITResource => ({
-    id: "",
+    id: faker.datatype.uuid(),
     og_image: "https://source.unsplash.com/random/50x50",
-    keyphrase: "man holding a beer",
-    date_created: "2022-03-27T16:08:49.507Z",
-    og_title: "Inter Link",
-    og_description: "This is a link, interlinked",
-    url: null,
-    url_title: null,
+    keyphrase: faker.lorem.sentence(5),
+    date_created: faker.datatype.datetime().toISOString(),
+    og_title: faker.lorem.sentence(4),
+    og_description: faker.lorem.sentence(12),
+    url: faker.internet.url(),
+    url_title: faker.lorem.sentence(4),
   });
 
   it("renders the component", async  () => {
@@ -24,9 +27,10 @@ describe("ResourceCard", () => {
 
   describe("image field", () => {
     it("displays an image", async  () => {
-      const { findByAltText } = render(<ResourceCard hit={mockedResource()} />);
+      const resourceData = { ...mockedResource() };
+      const { findByAltText } = render(<ResourceCard hit={resourceData} />);
 
-      const imageElement = await findByAltText(mockedResource().keyphrase!);
+      const imageElement = await findByAltText(resourceData.keyphrase!);
 
       expect(imageElement.attributes.getNamedItem("src")).not.toBeFalsy();
       expect(imageElement.attributes.getNamedItem("src")?.value).not.toBeFalsy();
@@ -34,8 +38,8 @@ describe("ResourceCard", () => {
     });
 
     it("renders no image if there is not src url", async  () => {
-      const data = { ...mockedResource(), og_image: null, keyphrase: null };
-      const { container } = render(<ResourceCard hit={data} />);
+      const resourceData = { ...mockedResource(), og_image: null, keyphrase: null };
+      const { container } = render(<ResourceCard hit={resourceData} />);
 
       const results = container.querySelectorAll("img");
 
@@ -47,9 +51,11 @@ describe("ResourceCard", () => {
 
     it("displays title", async () => {
 
-      const { findByText } = render(<ResourceCard hit={mockedResource()} />);
+      const resourceData = mockedResource();
 
-      const titleElement = await findByText(mockedResource().og_title!);
+      const { findByText } = render(<ResourceCard hit={resourceData} />);
+
+      const titleElement = await findByText(resourceData.og_title!);
 
       expect(titleElement).not.toBeFalsy();
     });
@@ -65,7 +71,7 @@ describe("ResourceCard", () => {
       expect(titleElement).not.toBeFalsy();
     });
 
-    it("displays url if title and url_title are null", async () => {
+    it("displays url if title and url_title are not set", async () => {
       const URL = "https://www.google.com";
       const hit : VITResource = { ...mockedResource(), og_title: null, url_title: null, url: URL };
 
@@ -92,11 +98,59 @@ describe("ResourceCard", () => {
     });
 
     it("displays created time diff with current time if diff is greater than a minute ", async () => {
-      const { findByText } = render(<ResourceCard hit={mockedResource()} />);
+      const hit = mockedResource();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      hit.date_created = yesterday.toISOString();
+      const { findByText } = render(<ResourceCard hit={hit} />);
 
       const postedAtElement = await findByText(patternPostedAt);
 
       expect(postedAtElement).not.toBeFalsy();
     });
+  });
+
+  describe("Actions", () => {
+
+    // it("display a more detailed page when clicked on card but not ", async () => {
+    //   const { findByText } = render(<ResourceCard hit={mockedResource()} />);
+    //
+    //   expect(await findByText("Visit site")).not.toBeFalsy();
+    // });
+
+    it("link is copied when hiperlink button is clicked ", async () => {
+    });
+
+    describe("Save", () => {
+
+      it("post is saved on local storage among others previous saved posts when save button is clicked", async () => {
+        const oldPost = mockedResource();
+        localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([oldPost]));
+
+      });
+
+      it("post is saved on empty local storage when save button is clicked ", async () => {
+        localStorage.setItem(SAVED_LINK_KEY, "");
+        const { findByTitle, findByText } = render(<ResourceCard hit={mockedResource()} />);
+
+        const saveButtonEl = await findByTitle("Save Button");
+        saveButtonEl.click();
+
+        await findByText("Link saved");
+        const value = localStorage.getItem(SAVED_LINK_KEY);
+        expect(value).not.toBeFalsy();
+      });
+
+      afterEach(() => {
+        localStorage.setItem(SAVED_LINK_KEY, "");
+      });
+    });
+
+
+    it("open a share view when share button is clicked ", async () => {
+
+    });
+
   });
 });

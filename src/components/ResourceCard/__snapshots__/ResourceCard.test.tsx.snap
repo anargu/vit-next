@@ -15,7 +15,7 @@ exports[`ResourceCard renders the component 1`] = `
         style="box-sizing: border-box; display: block; overflow: hidden; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"
       >
         <img
-          alt="man holding a beer"
+          alt="Repudiandae esse blanditiis natus et."
           data-nimg="fill"
           decoding="async"
           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -31,7 +31,7 @@ exports[`ResourceCard renders the component 1`] = `
         class="text-right"
       >
         <span>
-          3 months ago
+          207 months ago
         </span>
       </div>
       <p
@@ -39,18 +39,22 @@ exports[`ResourceCard renders the component 1`] = `
           text-4xl text-multiline-overflow-mixin
           text-ellipsis [-webkit-line-clamp:4]"
       >
-        Inter Link
+        Itaque velit omnis et.
       </p>
       <p
         class="self-center max-h-[calc(2rem*4)] text-2xl text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]"
       >
-        This is a link, interlinked
+        Porro ut et ipsam explicabo eligendi occaecati debitis et saepe eum dicta.
       </p>
       <div
         class="sc-bczRLJ hMlQFb flex justify-around"
       >
         <svg />
-        <svg />
+        <span
+          title="Save Button"
+        >
+          <svg />
+        </span>
         <svg />
       </div>
     </div>

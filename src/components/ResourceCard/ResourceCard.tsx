@@ -10,9 +10,19 @@ export type ResourceCardProps = {
   hit: VITResource,
 };
 
+export const SAVED_LINK_KEY = "saved_posts";
+
 export const ResourceCard = ({ hit } : ResourceCardProps) => {
 
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
+
+  const onSaveClicked = () => {
+    localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([hit]));
+
+  };
+
+  const onCopyLinkClicked = () => {};
+  const onShareClicked = () => {};
 
   return (
     <div className="relative py-4 px-4 text-white h-full">
@@ -34,7 +44,7 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
         <p className="self-center max-h-[calc(2rem*4)] text-2xl text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]">{resourceData.description}</p>
         <ActionsStyled className="flex justify-around">
           <Link/>
-          <Bookmark/>
+          <span title="Save Button" onClick={onSaveClicked}><Bookmark /></span>
           <Share/>
         </ActionsStyled>
       </div>
