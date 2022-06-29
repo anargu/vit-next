@@ -20,12 +20,14 @@ const Template: ComponentStory<typeof ResourceCard> = (args : ResourceCardProps)
 );
 
 const mockHitData = () : VITResource => ({
-    id: faker.datatype.uuid(),
-    og_image: "https://source.unsplash.com/random/50x50",
-    keyphrase: "man holding a beer",
-    date_created: faker.datatype.datetime().toISOString(),
-    og_title: "Inter Link",
-    og_description: "This is a link, interlinked",
+  id: faker.datatype.uuid(),
+  og_image: "https://source.unsplash.com/random/50x50",
+  keyphrase: "man holding a beer",
+  date_created: faker.datatype.datetime().toISOString(),
+  og_title: "Inter Link",
+  og_description: "This is a link, interlinked",
+  url_title: "The link",
+  url: "https://www.google.com",
 });
 
 export const Default = Template.bind({});
@@ -39,7 +41,6 @@ export const LongText = Template.bind({});
 LongText.args = {
   hit: {
     ...mockHitData(),
-    og_image: faker.lorem.text(),
     og_title: faker.lorem.paragraph(2),
     og_description: faker.lorem.paragraphs(4),
   }
@@ -54,9 +55,16 @@ export const FluidLayout = FluidTemplate.bind({});
 FluidLayout.args = {
   hit: {
     ...mockHitData(),
-    og_image: faker.lorem.text(),
     og_title: faker.lorem.paragraph(2),
     og_description: faker.lorem.paragraphs(4),
   }
 };
 
+export const NoImage = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+NoImage.args = {
+  hit: {
+    ...mockHitData(),
+    og_image: null,
+  }
+};
