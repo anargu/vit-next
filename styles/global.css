@@ -54,3 +54,12 @@ body {
 /* .ais-SearchBox-resetIcon path { */
 /*   fill: red; */
 /* } */
+
+.ais-Hits {
+  padding: 2rem 0 0 0;
+}
+
+.ais-Hits-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
