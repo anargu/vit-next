@@ -6,6 +6,7 @@
     "start": "next start",
     "test": "jest --watch",
     "test:ci": "jest --ci",
+    "cypress": "cypress open",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -45,6 +46,7 @@
     "autoprefixer": "^10.4.7",
     "babel-loader": "^8.2.5",
     "babel-plugin-inline-react-svg": "^2.0.1",
+    "cypress": "^10.3.0",
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",
     "postcss": "^8.4.5",
