@@ -104,18 +104,6 @@ exports[`renders homepage unchanged 1`] = `
           </ul>
         </div>
       </div>
-      <div
-        class=""
-      >
-        <div
-          class="bg-gray-800 w-[100%] h-[400px]"
-        >
-          title A
-        </div>
-        <div
-          class="bg-gray-800 w-[100%] h-[400px]"
-        />
-      </div>
     </div>
   </div>
 </div>
