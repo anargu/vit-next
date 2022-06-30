@@ -35,5 +35,5 @@
     "src/**/*.tsx",
     "types.d.ts"
   ],
-  "exclude": ["node_modules", "cypress/**/*.ts", , "cypress/**/*.js"]
+  "exclude": ["node_modules"]
 }
