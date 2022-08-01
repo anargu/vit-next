@@ -1,5 +1,5 @@
 
-describe('Notification', () => {
+describe('App Notifications', () => {
   it('should navigate to the about page', () => {
     // Start from the index page
     cy.visit('http://localhost:3000/');
@@ -12,5 +12,10 @@ describe('Notification', () => {
     //
     // // The new page should contain an h1 with "About page"
     // cy.get('h1').contains('About Page');
+
+    cy.findByText("Link is added.").should("exist");
   })
 })
+
+export {};
+
