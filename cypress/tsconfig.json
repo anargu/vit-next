@@ -1,10 +1,12 @@
 {
   "extends": "../tsconfig",
   "compilerOptions": {
-    "baseUrl": "../node_modules"
+    "baseUrl": "../node_modules",
+    "types": ["cypress", "@testing-library/cypress"]
   },
   "include": [
     "../node_modules/cypress/types",
+    "../node_modules/@testing-library/cypress/types",
     "**/*.ts"
   ]
 }
