@@ -4,10 +4,11 @@ import { Hit } from 'react-instantsearch-core';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { VITResource } from '../core/entities';
 
+console.log(">>> process.env.NEXT_PUBLIC_MEILISEARCH_HOST_URL", process.env.NEXT_PUBLIC_MEILISEARCH_HOST_URL);
 
 const searchClient = instantMeiliSearch(
-  process.env.MEILISEARCH_HOST_URL || "",
-  process.env.MEILISEARCH_API_KEY ,
+  process.env.NEXT_PUBLIC_MEILISEARCH_HOST_URL || "",
+  process.env.NEXT_PUBLIC_MEILISEARCH_API_KEY ,
   {
     primaryKey: "id",
   }
