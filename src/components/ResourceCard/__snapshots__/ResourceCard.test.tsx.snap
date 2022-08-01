@@ -13,7 +13,7 @@ exports[`ResourceCard renders the component 1`] = `
     >
       <div
         alt="Repudiandae esse blanditiis natus et."
-        class="w-full h-full bg-contain bg-no-repeat"
+        class="w-full h-full bg-cover bg-no-repeat"
         role="img"
         style="background-image: url(https://source.unsplash.com/random/50x50);"
       />
