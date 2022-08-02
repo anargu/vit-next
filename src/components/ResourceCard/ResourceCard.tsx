@@ -1,8 +1,6 @@
 import { Resource, VITResource } from "../../core/entities";
-import Image from "next/image"
 import { useMemo } from "react";
 import styled from 'styled-components';
-import Link from "../../../public/assets/link.svg";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Share from "../../../public/assets/share.svg";
 import { showDefaultNotification } from "../Notification/Notification";
@@ -25,8 +23,13 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
     showDefaultNotification("Link saved locally.");
   };
 
-  const onCopyLinkClicked = () => {};
-  const onShareClicked = () => {};
+  const onShareClicked = () => {
+    navigator.clipboard.writeText(hit.url || "");
+    showDefaultNotification("Link copied to Clipboard.");
+  };
+  
+  // TODO: Remove if a third action is not needed
+  // const onCopyLinkClicked = () => {};
 
   return (
     <div className="relative py-4 px-4 text-white h-full">
@@ -48,9 +51,10 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
 
         <p className="self-center max-h-[calc(2rem*4)] text-2xl text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]">{resourceData.description}</p>
         <ActionsStyled className="flex justify-around">
-          <Link/>
+          {/* Remove <Link /> Icon If a third action is unneeded */}
+          {/* <Link/> */}
           <span title="Save Button" onClick={onSaveClicked}><Bookmark /></span>
-          <Share/>
+          <span title="Share Button" onClick={onShareClicked}><Share/></span>
         </ActionsStyled>
       </div>
     </div>

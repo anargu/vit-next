@@ -43,13 +43,16 @@ exports[`ResourceCard renders the component 1`] = `
       <div
         class="sc-bczRLJ hMlQFb flex justify-around"
       >
-        <svg />
         <span
           title="Save Button"
         >
           <svg />
         </span>
-        <svg />
+        <span
+          title="Share Button"
+        >
+          <svg />
+        </span>
       </div>
     </div>
   </div>

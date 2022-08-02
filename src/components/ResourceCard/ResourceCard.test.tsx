@@ -1,11 +1,18 @@
 import { VITResource } from "@/src/core/entities";
 import { faker } from "@faker-js/faker";
 import { MantineProvider } from "@mantine/core";
+import { userEvent } from "@storybook/testing-library";
 import { act, findByRole, render } from "@testing-library/react";
 import { WithNotificationsProvider } from "../Notification/Notification";
 import { ResourceCard, SAVED_LINK_KEY } from "./ResourceCard";
 
 faker.seed(1);
+
+Object.assign(navigator, {
+  clipboard: {
+    writeText: () => {},
+  },
+});
 
 export const patternPostedAt = /\d+\s(m|h|hours?|days?|months?|years?)\sago/;
 
@@ -118,9 +125,6 @@ describe("ResourceCard", () => {
     //   expect(await findByText("Visit site")).not.toBeFalsy();
     // });
 
-    it("link is copied when hiperlink button is clicked ", async () => {
-    });
-
     describe("Save", () => {
 
       it("post is saved on local storage among others previous saved posts when save button is clicked", async () => {
@@ -178,10 +182,25 @@ describe("ResourceCard", () => {
       });
     });
 
+    describe("Share", () => {
 
-    it("open a share view when share button is clicked ", async () => {
+      jest.spyOn(navigator.clipboard, "writeText");
 
+      it("link is copied on clipboard when share button is clicked ", async () => {
+        const hit = mockedResource();
+        hit.date_created = new Date().toISOString();
+
+        const { findByTitle } = render(<ResourceCard hit={hit} />);
+
+        await act(async () => {
+          const shareButtonEl = await findByTitle("Share Button");
+          shareButtonEl.click();
+        });
+
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith(hit.url);
+      });
     });
+
 
   });
 });
