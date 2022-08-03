@@ -183,7 +183,6 @@ describe("ResourceCard", () => {
     });
 
     describe("Share", () => {
-
       jest.spyOn(navigator.clipboard, "writeText");
 
       it("link is copied on clipboard when share button is clicked ", async () => {
@@ -200,7 +199,6 @@ describe("ResourceCard", () => {
         expect(navigator.clipboard.writeText).toHaveBeenCalledWith(hit.url);
       });
     });
-
 
   });
 });
