@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { VITResource } from "@/src/core/entities";
 import { DetailedCard, useDetailedCard } from "./DetailedCard";
 import { useEffect } from "react";
+import { userEvent } from "@storybook/testing-library";
 faker.seed(1);
 
 const mockedResource = () : VITResource => ({
@@ -61,4 +62,25 @@ describe("useDetailedCard", () => {
     await findByText("Visit Site");
   });
 
+  it("should hide detailedcard when closed is clicked", async () => {
+    const hit = mockedResource();
+
+    const Scaffold = () => {
+      const { show, detailedCard } = useDetailedCard();
+
+      useEffect(() => {
+        show({...hit})
+      }, []);
+
+      return (<div>{detailedCard}</div>);
+    };
+
+    const { container, findByTitle } = render(<Scaffold />);
+    
+    expect(container.firstChild?.childNodes).not.toHaveLength(0);
+
+    const closeButton = await findByTitle("close");
+    userEvent.click(closeButton);
+    expect(container.firstChild?.childNodes).toHaveLength(0);
+  });
 });

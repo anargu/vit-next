@@ -22,15 +22,16 @@ export const useDetailedCard = () => {
 
 
   const show = (data : VITResource) => setHit(data);
-
+  
+  const close = () => setHit(null);
 
   const detailedCard = useMemo(() => {
     if (!hit) return null;
 
-    return <DetailedCard hit={hit} />
+    return <DetailedCard hit={hit} onClose={close} />
   }, [hit]);
 
-  return { show, detailedCard };
+  return { show, close, detailedCard };
 };
 
 export const DetailedCard = (props : DetailedCardProps) => {
@@ -49,11 +50,11 @@ export const DetailedCard = (props : DetailedCardProps) => {
   );
 
   return (
-    <div className="h-[100vh] w-full fixed bottom-0 h-full w-full">
-      <div className="h-full bg-black/50 z-10">
-        <div onClick={() => props.onClose?.()} className="cursor-pointer m-4 float-right text-4xl text-white font-bold">&times;</div>
+    <div className="h-[100vh] w-full fixed bottom-0 h-full w-full z-50">
+      <div className="h-full bg-black/70 z-40">
+        <div title="close" onClick={() => props.onClose?.()} className="cursor-pointer m-4 float-right text-4xl text-white font-bold">&times;</div>
       </div>
-      <div className="h-[60vh] absolute bottom-0 w-full z-20 bg-white">
+      <div className="h-[60vh] absolute bottom-0 w-full z-50 bg-white">
         <div className="mx-6 py-2"><ActionBar /></div>
         <div className="bg-black text-center h-[160px]">
           {resourceData.imageSrc && (
