@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   "stories": [
     "../src/**/*.stories.mdx",
@@ -28,6 +30,7 @@ module.exports = {
   "staticDirs": ['../public'],
   webpackFinal: async (config) => {
     config.resolve.alias["next/image"] = require.resolve("./NextImage.js");
+    config.resolve.alias["@/src"] = path.resolve(__dirname, "../src/");
     return config;
   },
 };
