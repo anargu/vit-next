@@ -172,6 +172,7 @@ describe("ResourceCard", () => {
           saveButtonEl.click();
         });
 
+        // Check if Notification is shown.
         await findByText("Link saved locally.");
         const value = localStorage.getItem(SAVED_LINK_KEY);
         expect(value).not.toBeFalsy();
