@@ -49,7 +49,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
   );
 
   return (
-    <div className="h-[100vh] w-full relative">
+    <div className="h-[100vh] w-full fixed bottom-0 h-full w-full">
       <div className="h-full bg-black/50 z-10">
         <div onClick={() => props.onClose?.()} className="cursor-pointer m-4 float-right text-4xl text-white font-bold">&times;</div>
       </div>
