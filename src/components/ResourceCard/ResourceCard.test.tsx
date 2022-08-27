@@ -34,6 +34,17 @@ describe("ResourceCard", () => {
     expect(container).toMatchSnapshot();
   });
 
+  it("should appear DetailedCard Fullscreen Dialog when user taps on card", async  () => {
+    const resourceData = { ...mockedResource() };
+    const { findByText, container } = render(<ResourceCard hit={resourceData} />);
+
+    const resourceCard = container.firstElementChild;
+    userEvent.click(resourceCard!);
+
+    const element = await findByText("Visit Site");
+    expect(element).not.toBeNull();
+  });
+
   describe("image field", () => {
     it("displays an image", async  () => {
       const resourceData = { ...mockedResource() };
@@ -88,7 +99,6 @@ describe("ResourceCard", () => {
       expect(titleElement).not.toBeFalsy();
     });
   });
-
 
   describe("field postedAt", () => {
 
