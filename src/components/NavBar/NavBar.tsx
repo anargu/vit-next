@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { NavBarItemMenu } from "./NavBarMenu";
+import { useRouter } from "next/router";
 
 export const FEED_LABEL = "Feed";
 export const SAVED_LABEL = "Saved";
@@ -21,22 +22,21 @@ interface NavBarProps {
 interface LeftItem {
   label: string,
   active: boolean,
+  path: string,
 }
 
 export const NavBar = (props : NavBarProps) => {
+  const router = useRouter();
+  const { pathname } = router;
 
   const [leftItems, setLeftItems] = useState<LeftItem[]>([
-    { label: FEED_LABEL, active: true, },
-    { label: SAVED_LABEL, active: false, },
+    { label: FEED_LABEL, path: "/", active: true, },
+    { label: SAVED_LABEL, path: "/saved", active: false, },
   ]);
 
   const onSelectItem = (item : LeftItem) => {
-    setLeftItems(
-      leftItems.map((leftItem) => (leftItem.label === item.label)
-        ? ({ ...leftItem, active: true })
-        : ({ ...leftItem, active: false })
-      )
-    );
+    if (item.label === SAVED_LABEL) return router.push("/saved");
+    if (item.label === FEED_LABEL) return router.push("/");
   };
 
   return (
@@ -44,7 +44,7 @@ export const NavBar = (props : NavBarProps) => {
       {leftItems.map((item) =>
         <NavBarItem
           key={item.label}
-          active={item.active}
+          active={item.path === pathname}
           onClick={() => onSelectItem(item)}
         >{item.label}</NavBarItem>)}
 
