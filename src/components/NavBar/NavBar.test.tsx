@@ -1,5 +1,18 @@
 import { act, fireEvent, render } from "@testing-library/react";
+import { useState } from "react";
 import {NavBar, FEED_LABEL, SAVED_LABEL} from "./NavBar";
+
+jest.mock("next/router", () => ({
+  __esModule: true,
+  useRouter: () => {
+    const [pathname, setPathname] = useState("/");
+
+    return {
+      push: (newPath : string) => { setPathname(newPath) },
+      pathname,
+    };
+  },
+}));
 
 describe("NavBar", () => {
 
@@ -20,17 +33,7 @@ describe("NavBar", () => {
 
     const feedLabel = getByText(FEED_LABEL);
 
-    expect(feedLabel).toHaveClass("text-black-400");
-  });
-
-  it("set Saved Tab active when clicked", async () => {
-    const { getByText } = render(<NavBar/>);
-
-    const feedLabel = getByText(FEED_LABEL);
-
-    act(() => { fireEvent.click(feedLabel); });
-
-    expect(feedLabel.className).toContain("text-black");
+    expect(feedLabel.className).toContain("text-black-400");
   });
 
   it("set Saved Tab active when clicked", async () => {

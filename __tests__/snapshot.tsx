@@ -9,6 +9,18 @@ jest.mock("../src/components/MeiliSearch", () => ({
   },
 }));
 
+jest.mock("next/router", () => ({
+  __esModule: true,
+  useRouter: () => {
+    let pathname = "/";
+
+    return {
+      push: (newPath : string) => { pathname = newPath },
+      pathname,
+    };
+  },
+}));
+
 it('renders homepage unchanged', () => {
   const { container } = render(<Home />);
   expect(container).toMatchSnapshot();

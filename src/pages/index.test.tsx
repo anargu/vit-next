@@ -2,6 +2,16 @@ import { render } from '@testing-library/react'
 import { IndexPage } from "../pages/index";
 import { mockMeiliSearchComponent } from '../components/MeiliSearch.mocks';
 
+jest.mock("next/router", () => ({
+  __esModule: true,
+  useRouter: () => {
+    return {
+      push: () => {},
+      pathname: "/",
+    };
+  },
+}));
+
 jest.mock("../components/MeiliSearch", () => ({
   __esModule: true,
   MeiliSearchBar: () => mockMeiliSearchComponent.MeiliSearchBar,
