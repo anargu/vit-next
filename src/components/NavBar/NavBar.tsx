@@ -40,7 +40,8 @@ export const NavBar = (props : NavBarProps) => {
   };
 
   return (
-    <div className="grid grid-cols-[48px_48px_auto_70px] lg:grid-cols-[96px_96px_auto_70px] items-center h-[72px] mx-4">
+    <div className="grid grid-cols-[20px_48px_48px_auto_70px] lg:grid-cols-[24px_96px_96px_auto_70px] items-center h-[72px] mx-4">
+      <Image src="/assets/v_icon_512px.png" width="24px" height="24px" sizes="(min-width: 1024px) 24px, 20px"/>
       {leftItems.map((item) =>
         <NavBarItem
           key={item.label}
