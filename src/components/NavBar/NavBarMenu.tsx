@@ -31,7 +31,7 @@ const ref = useRef<HTMLDivElement>(null);
         {children}
       </div>
       <div className={`${!isOpen && "hidden"} ${right && "right-0"}
-        absolute z-20 min-w-[96px] text-base list-none bg-white rounded divide-y
+        absolute z-30 min-w-[96px] text-base list-none bg-white rounded divide-y
         divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600`}
       >
         {menu && (
