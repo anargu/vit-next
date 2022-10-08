@@ -1,4 +1,5 @@
 import { VITResource } from "@/src/core/entities";
+import { useSavedResources } from "@/src/hooks/useSavedResources";
 import { faker } from "@faker-js/faker";
 import { MantineProvider } from "@mantine/core";
 import { userEvent } from "@storybook/testing-library";
@@ -142,10 +143,19 @@ describe("ResourceCard", () => {
         localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([oldPost]));
 
         const newPost = mockedResource();
+
+        const WrapperResourceCard = () => {
+          const { saveResource } = useSavedResources();
+
+          return (
+            <ResourceCard onSaveResource={saveResource} hit={newPost} />
+          )
+        };
+
         const { findByTitle, findByText } = render(
           <MantineProvider>
             <WithNotificationsProvider>
-              <ResourceCard hit={newPost} />
+              <WrapperResourceCard/>
             </WithNotificationsProvider>
           </MantineProvider>
         );
@@ -169,10 +179,18 @@ describe("ResourceCard", () => {
       it("post is saved on empty local storage when save button is clicked ", async () => {
         localStorage.removeItem(SAVED_LINK_KEY);
 
+        const WrapperResourceCard = () => {
+          const { saveResource } = useSavedResources();
+
+          return (
+            <ResourceCard onSaveResource={saveResource} hit={mockedResource()} />
+          )
+        };
+
         const { findByTitle, findByText } = render(
           <MantineProvider>
             <WithNotificationsProvider>
-              <ResourceCard hit={mockedResource()} />
+              <WrapperResourceCard/>
             </WithNotificationsProvider>
           </MantineProvider>
         );

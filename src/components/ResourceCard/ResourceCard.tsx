@@ -3,27 +3,30 @@ import { useMemo } from "react";
 import styled from 'styled-components';
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Share from "../../../public/assets/share.svg";
-import { showDefaultNotification } from "../Notification/Notification";
+import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 import { BackgroundImage } from "./BackgroundImage";
 import { useDetailedCard } from "../DetailedCard/DetailedCard";
+import { SaveResult } from "../../hooks/useSavedResources";
 
 export type ResourceCardProps = {
   hit: VITResource,
+  onSaveResource?: (resource : VITResource) => SaveResult,
 };
 
 export const SAVED_LINK_KEY = "saved_posts";
 
-export const ResourceCard = ({ hit } : ResourceCardProps) => {
+export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 
   const { show: showDetailedCard, detailedCard } = useDetailedCard();
 
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
 
   const onSaveClicked = () => {
-    const prevList = JSON.parse(localStorage.getItem(SAVED_LINK_KEY)!) || [];
-    localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([...prevList, hit]));
+    if (!onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
+    
+    const { isAlreadySaved } = onSaveResource(hit);
 
-    showDefaultNotification("Link saved locally.");
+    showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
   };
 
   const onShareClicked = () => {
@@ -62,7 +65,11 @@ export const ResourceCard = ({ hit } : ResourceCardProps) => {
           <ActionsStyled className="flex justify-around">
             {/* Remove <Link /> Icon If a third action is unneeded */}
             {/* <Link/> */}
-            <span title="Save Button" onClick={onSaveClicked}><Bookmark /></span>
+            <span className="relative z-20" title="Save Button" onClick={(e) => {
+              e.stopPropagation();
+
+              onSaveClicked();
+            }}><Bookmark /></span>
             <span title="Share Button" onClick={onShareClicked}><Share/></span>
           </ActionsStyled>
         </div>
