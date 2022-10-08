@@ -23,6 +23,7 @@
     "next": "latest",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-hook-form": "^7.36.1",
     "react-instantsearch-dom": "^6.26.0",
     "react-instantsearch-hooks-web": "^6.26.0",
     "styled-components": "^5.3.5"
