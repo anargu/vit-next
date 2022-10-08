@@ -1,16 +1,31 @@
 import React from 'react';
-import { NotificationsProvider, showNotification } from '@mantine/notifications';
+import { NotificationsProvider, showNotification as mantineNotification } from '@mantine/notifications';
+import { DefaultMantineColor } from '@mantine/core';
 
 export type NotificationProps = {
   children?: JSX.Element;
 };
 
-export const showDefaultNotification = (message: string, title : string = "Information") => {
-  showNotification({
+export type NotificationOptions = {
+  color?: DefaultMantineColor | undefined | string,
+}
+
+export const showNotification = (message: string, title : string = "Information", options: NotificationOptions) => {
+  mantineNotification({
     title: title,
     message: message,
+    color: options?.color ?? "indigo",
   });
 };
+
+export const showDefaultNotification = (message: string, title : string = "Information") => {
+  mantineNotification({
+    message,
+    title,
+    color: "indigo",
+  });
+};
+
 
 export const WithNotificationsProvider = (props : NotificationProps) : JSX.Element => {
   if (!props.children) return <div />;
