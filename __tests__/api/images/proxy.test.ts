@@ -3,7 +3,6 @@ import { createMocks, RequestMethod } from "node-mocks-http"
 import fetch from 'isomorphic-unfetch'
 import imageProxy from "../../../pages/api/images/proxy"
 
-
 // TODO: Refactor when proxyImageEndpoint is used.
 async function testRetrieveImage (req: NextApiRequest, res: NextApiResponse) {
     const url = decodeURIComponent(req.query.url as string);
