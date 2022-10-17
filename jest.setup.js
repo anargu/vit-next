@@ -8,3 +8,8 @@ import '@testing-library/jest-dom/extend-expect'
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+global.fetch = jest.fn(() => Promise.resolve({
+  // TODO: Need refactor.
+  json: () => Promise.resolve(null)
+}));
