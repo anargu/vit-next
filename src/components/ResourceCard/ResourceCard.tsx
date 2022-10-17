@@ -10,7 +10,7 @@ import { SaveResult } from "../../hooks/useSavedResources";
 
 export type ResourceCardProps = {
   hit: VITResource,
-  onSaveResource?: (resource : VITResource) => SaveResult,
+  onSaveResource?: (resource : VITResource) => Promise<SaveResult>,
 };
 
 export const SAVED_LINK_KEY = "saved_posts";
@@ -21,10 +21,10 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
 
-  const onSaveClicked = () => {
+  const onSaveClicked = async () => {
     if (!onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
     
-    const { isAlreadySaved } = onSaveResource(hit);
+    const { isAlreadySaved } = await onSaveResource(hit);
 
     showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
   };

@@ -1,3 +1,5 @@
+import { APIResponse } from "@/pages/api/entities";
+import { MetascrapperResponse } from "@/pages/api/metadata";
 import { useEffect, useState } from "react";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
 import { VITResource } from "../core/entities";
@@ -22,8 +24,15 @@ export const useSavedResources = () => {
     setSavedResources(savedPosts);
   }, [savedResources]);
 
-  const saveResource = (resource : string | VITResource) : SaveResult => {
+  const saveResource = async (resource : string | VITResource) : Promise<SaveResult> => {
     const isStringUrl = typeof resource === "string";
+
+    let resourceMetadata = null;
+
+    if (isStringUrl) {
+      const response = await fetch(`/api/metadata?url=${resource}`);
+      resourceMetadata = await response.json() as APIResponse;
+    }
 
     // Fetch all posts.
     const rawData = localStorage.getItem(SAVED_LINK_KEY) ?? "[]";
@@ -34,21 +43,33 @@ export const useSavedResources = () => {
 
     const isAlreadySaved = resourceIndex !== -1;
 
-    let updatedSavedPosts;
+    let updatedSavedPosts : VITResource[];
 
     if (isAlreadySaved) {
+      // Delete the post.
       updatedSavedPosts = savedPosts.filter((_, index) => index !== resourceIndex);
     } else {
+      // Append the post.
       updatedSavedPosts = [
         ...savedPosts,
-        isStringUrl
+        !isStringUrl
+        ? resource
+        : !!resourceMetadata && resourceMetadata.isOk
         ? {
-            id: resource,
+            id: (resourceMetadata.data as MetascrapperResponse)?.url ,
             date_created: new Date().toISOString(),
-            url: resource,
-            url_title: resource
+            url: (resourceMetadata.data as MetascrapperResponse)?.url,
+            url_title: (resourceMetadata.data as MetascrapperResponse)?.title,
+            og_image: (resourceMetadata.data as MetascrapperResponse)?.image,
+            og_title: (resourceMetadata.data as MetascrapperResponse)?.title,
+            og_description: (resourceMetadata.data as MetascrapperResponse)?.description,
           } as VITResource
-        : resource];
+        : {
+            url: resource,
+            url_title: resource,
+            id: resource,
+        } as VITResource
+      ];
     }
 
     localStorage.setItem(SAVED_LINK_KEY, JSON.stringify(updatedSavedPosts));

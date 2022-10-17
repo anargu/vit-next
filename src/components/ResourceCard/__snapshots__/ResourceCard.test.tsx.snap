@@ -24,7 +24,7 @@ exports[`ResourceCard renders the component 1`] = `
         class="text-right"
       >
         <span>
-          210 months ago
+          211 months ago
         </span>
       </div>
       <p

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BottomSheetWrapper } from '../components/BottomSheetWrapper';
+import { SheetWrapper } from '../components/SheetWrapper/SheetWrapper';
 import NavBar from '../components/NavBar';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
@@ -16,8 +16,8 @@ export const SavedPage = () => {
   };
   const { register, handleSubmit, formState: { errors }, reset } = useForm<SubmitFormTypes>();
 
-  const onSubmitCutomLink : SubmitHandler<SubmitFormTypes> = (data) => {
-    saveResource(data.inputLink);
+  const onSubmitCutomLink : SubmitHandler<SubmitFormTypes> = async (data) => {
+    await saveResource(data.inputLink);
 
     setShowSaveUrlSheet(false);
     reset();
@@ -38,7 +38,7 @@ export const SavedPage = () => {
           className="rounded px-2 underline cursor-pointer py-1 text-yellow-400 text-white" title="Save a Link">Save yours here.</span>
       </div>
 
-      <BottomSheetWrapper show={showSaveUrlSheet} onCloseSheet={() => {setShowSaveUrlSheet(false);}}>
+      <SheetWrapper show={showSaveUrlSheet} onCloseSheet={() => {setShowSaveUrlSheet(false);}}>
         <div className="pb-8 pt-4 px-4">
           <form onSubmit={handleSubmit(onSubmitCutomLink)}>
             <div className="mb-4">
@@ -58,7 +58,7 @@ export const SavedPage = () => {
             </div>
           </form>
         </div>
-      </BottomSheetWrapper>
+      </SheetWrapper>
 
       <div className="min-h-[calc(100vh-72px)]">
         {children}

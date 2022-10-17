@@ -2,6 +2,7 @@ import { Resource, VITResource } from "@/src/core/entities";
 import { ReactNode, useMemo, useState } from "react";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Share from "../../../public/assets/share.svg";
+import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
 
 export type DetailedCardProps = {
   hit: VITResource,
@@ -28,7 +29,12 @@ export const useDetailedCard = () => {
   const detailedCard = useMemo(() => {
     if (!hit) return null;
 
-    return <DetailedCard hit={hit} onClose={close} />
+    return <SheetWrapper
+      show={true}
+      onCloseSheet={close}>
+      <DetailedCard hit={hit} />
+    </SheetWrapper>
+    /* return <DetailedCard hit={hit} onClose={close} /> */
   }, [hit]);
 
   return { show, close, detailedCard };
@@ -50,21 +56,16 @@ export const DetailedCard = (props : DetailedCardProps) => {
   );
 
   return (
-    <div className="h-[100vh] w-full fixed bottom-0 left-0 right-0 h-full z-50">
-      <div className="h-full bg-black/70 z-40">
-        <div title="close" onClick={() => props.onClose?.()} className="cursor-pointer m-4 float-right text-4xl text-white font-bold">&times;</div>
+    <div>
+      <div className="mx-6 py-2"><ActionBar /></div>
+      <div className="bg-black text-center h-[160px]">
+        {resourceData.imageSrc && (
+          <img className="inline-block aspect-video h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
+        )}
       </div>
-      <div className="h-[60vh] absolute bottom-0 w-full z-50 bg-white">
-        <div className="mx-6 py-2"><ActionBar /></div>
-        <div className="bg-black text-center h-[160px]">
-          {resourceData.imageSrc && (
-            <img className="inline-block aspect-video h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
-          )}
-        </div>
-        <div className="mx-6">
-          <h1 className="my-4 mx-0">{resourceData.title}</h1>
-          <p>{resourceData.description}</p>
-        </div>
+      <div className="mx-6">
+        <h1 className="my-4 mx-0">{resourceData.title}</h1>
+        <p>{resourceData.description}</p>
       </div>
     </div>
   );
