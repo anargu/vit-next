@@ -14,6 +14,7 @@ export const SavedPage = () => {
   type SubmitFormTypes = {
     inputLink: string
   };
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm<SubmitFormTypes>();
 
   const onSubmitCutomLink : SubmitHandler<SubmitFormTypes> = async (data) => {
