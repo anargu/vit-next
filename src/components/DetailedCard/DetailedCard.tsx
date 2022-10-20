@@ -46,7 +46,12 @@ export const DetailedCard = (props : DetailedCardProps) => {
 
   const ActionBar = () => (
     <div className="grid grid-cols-[100px_auto_80px]">
-      <OutlineButton>Visit Site</OutlineButton>
+      <OutlineButton onClick={() => {
+        if (!props.hit.url) return;
+        if (typeof window === "undefined") return;
+
+        window.location.href = props.hit.url
+      }}>Visit Site</OutlineButton>
       <div />
       <div className="inline-flex justify-between items-center">
         <span title="Save Button" onClick={props.onSaveClicked}><Bookmark /></span>
