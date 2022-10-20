@@ -95,7 +95,7 @@ exports[`About renders about view 1`] = `
         About VIT
       </h1>
       <div
-        class="leading-tight text-lg max-w-[80%] mx-6"
+        class="leading-tight text-lg max-w-[80%] mx-6 mb-2"
       >
         VIT is formed by a small group of Peruvian developers. Our goal (for now) is to share useful tools in any sub-field related to Computer Science, Art, UI/UX, XR, and so on. We surf on the internet (as probably you do) and collect urls, resources, blogs that we consider 
         <span
@@ -109,6 +109,17 @@ exports[`About renders about view 1`] = `
         >
           Very Interesting Things (VIT).
         </span>
+      </div>
+      <div
+        class="leading-tight text-lg max-w-[80%] mx-6 mb-2"
+      >
+        Special thanks to 
+        <a
+          href="https://www.instagram.com/m4xlr/"
+        >
+          Max
+        </a>
+        . His work on the UI design was vital and inspiring to implement the frontend part
       </div>
       <div
         class="leading-tight float-right text-right max-w-[80%] mx-6"
