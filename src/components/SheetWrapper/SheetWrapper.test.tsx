@@ -46,8 +46,10 @@ describe("SheetWrapper Component", () => {
 
     await findByText("hello");
 
-    const closeButtonEl = await findByTitle("close");
-    userEvent.click(closeButtonEl);
+    await act(async () => {
+      const closeButtonEl = await findByTitle("close");
+      userEvent.click(closeButtonEl);
+    });
 
     expect(queryByText("hello")).toBeNull();
   });
