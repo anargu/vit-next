@@ -13,3 +13,26 @@ global.fetch = jest.fn(() => Promise.resolve({
   // TODO: Need refactor.
   json: () => Promise.resolve(null)
 }));
+
+jest.mock('framer-motion', () => {
+  const actual = jest.requireActual('framer-motion');
+
+  return {
+    __esModule: true,
+    ...actual,
+    AnimatePresence: ({ children, ...props }) => (
+      <div {...props} className='mocked-framer-motion-AnimatePresence'>
+        { children }
+      </div>
+    ),
+    motion: {
+      ...actual.motion,
+      div: ({ children, ...props }) => (
+        <div {...props} className='mocked-framer-motion-div'>
+          { children }
+        </div>
+      ),
+    },
+  };
+});
+
