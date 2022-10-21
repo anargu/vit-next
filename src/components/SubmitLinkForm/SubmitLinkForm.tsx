@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { showNotification } from '../Notification/Notification';
 
-// TODO: Tests.
 export type SubmitLinkFormProps = {
   onSubmitWithData: (link : string) => Promise<void>,
 };
@@ -55,6 +54,7 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
             type="submit"
             value={loading ? "Saving..." : "Save"}
             disabled={loading}
+            role="button"
             className="inline-block bg-yellow-400 text-lg px-6 py-2 rounded disabled:bg-yellow-300" />
         </div>
       </form>
