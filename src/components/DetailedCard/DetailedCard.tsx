@@ -50,7 +50,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
         if (!props.hit.url) return;
         if (typeof window === "undefined") return;
 
-        window.location.href = props.hit.url
+        window.open(props.hit.url, "_blank");
       }}>Visit Site</OutlineButton>
       <div />
       <div className="inline-flex justify-between items-center">
