@@ -40,13 +40,15 @@ exports[`ResourceCard renders the component 1`] = `
         Porro ut et ipsam explicabo eligendi occaecati debitis et saepe eum dicta.
       </p>
       <div
-        class="sc-bczRLJ hMlQFb flex justify-around"
+        class="sc-gsnTZi ffZZgv flex justify-around"
       >
         <span
           class="relative z-20"
           title="Save Button"
         >
-          <svg />
+          <svg
+            class=""
+          />
         </span>
         <span
           title="Share Button"

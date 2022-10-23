@@ -1,17 +1,20 @@
 import { Resource, VITResource } from "@/src/core/entities";
 import { ReactNode, useMemo, useState } from "react";
+import styled from "styled-components";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Share from "../../../public/assets/share.svg";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
 
 export type DetailedCardProps = {
   hit: VITResource,
+  isSaved?: boolean,
   onSaveClicked?: () => void,
   onShareClicked?: () => void,
   onClose?: () => void,
 };
 
 export type DetailedCardWrapperProps = {
+  isSaved?: boolean,
   onSaveClicked?: () => void,
   onShareClicked?: () => void,
 };
@@ -39,6 +42,7 @@ export const useDetailedCard = () => {
       onCloseSheet={close}>
       <DetailedCard
         hit={hit}
+        isSaved={props.isSaved}
         onSaveClicked={props.onSaveClicked}
         onShareClicked={props.onShareClicked}
       />
@@ -62,8 +66,8 @@ export const DetailedCard = (props : DetailedCardProps) => {
       }}>Visit Site</OutlineButton>
       <div />
       <div className="inline-flex justify-between items-center">
-        <span title="Save Button" onClick={props.onSaveClicked}><Bookmark /></span>
-        <span title="Share Button" onClick={props.onShareClicked}><Share /></span>
+        <ActionStyled title="Save Button" onClick={props.onSaveClicked}><Bookmark className={props.isSaved ? "filled" : "" } /></ActionStyled>
+        <ActionStyled title="Share Button" onClick={props.onShareClicked}><Share /></ActionStyled>
       </div>
     </div>
   );
@@ -83,3 +87,10 @@ export const DetailedCard = (props : DetailedCardProps) => {
     </div>
   );
 };
+
+const ActionStyled = styled.span`
+  svg.filled path {
+    fill: #000;
+  }
+`;
+

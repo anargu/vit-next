@@ -79,5 +79,13 @@ export const useSavedResources = () => {
     return { isAlreadySaved };
   };
 
-  return { savedResources, saveResource };
+  const isSaved = (hit : VITResource) => {
+    if (!savedResources) return false;
+
+    const found = savedResources.find((savedResource) => savedResource.id === hit.id);
+
+    return !!found
+  };
+
+  return { savedResources, saveResource, isSaved };
 };

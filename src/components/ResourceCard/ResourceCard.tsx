@@ -6,7 +6,7 @@ import Share from "../../../public/assets/share.svg";
 import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 import { BackgroundImage } from "./BackgroundImage";
 import { useDetailedCard } from "../DetailedCard/DetailedCard";
-import { SaveResult } from "../../hooks/useSavedResources";
+import { SaveResult, useSavedResources } from "../../hooks/useSavedResources";
 
 export type ResourceCardProps = {
   hit: VITResource,
@@ -18,6 +18,8 @@ export const SAVED_LINK_KEY = "saved_posts";
 export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 
   const { show: showDetailedCard, DetailedCardWrapper } = useDetailedCard();
+
+  const { isSaved } = useSavedResources();
 
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
 
@@ -44,6 +46,7 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
   return (
     <>
       <DetailedCardWrapper
+        isSaved={isSaved(hit)}
         onShareClicked={onShareClicked}
         onSaveClicked={onSaveClicked} />
 
@@ -72,7 +75,7 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
               e.stopPropagation();
 
               onSaveClicked();
-            }}><Bookmark /></span>
+            }}><Bookmark className={isSaved(hit) ? "filled" : ""} /></span>
             <span title="Share Button" onClick={onShareClicked}><Share/></span>
           </ActionsStyled>
         </div>
@@ -84,5 +87,9 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 const ActionsStyled = styled.div`
   svg path {
     stroke: #FFF;
+  }
+
+  svg.filled path {
+    fill: #FFF;
   }
 `;
