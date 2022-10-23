@@ -11,6 +11,11 @@ export type DetailedCardProps = {
   onClose?: () => void,
 };
 
+export type DetailedCardWrapperProps = {
+  onSaveClicked?: () => void,
+  onShareClicked?: () => void,
+};
+
 const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
   <button
     className="px-2 py-1 outline-none rounded-md border-2 border-gray-800"
@@ -26,18 +31,21 @@ export const useDetailedCard = () => {
   
   const close = () => setHit(null);
 
-  const detailedCard = useMemo(() => {
+  const DetailedCardWrapper = (props : DetailedCardWrapperProps) => {
     if (!hit) return null;
 
     return <SheetWrapper
       show={true}
       onCloseSheet={close}>
-      <DetailedCard hit={hit} />
+      <DetailedCard
+        hit={hit}
+        onSaveClicked={props.onSaveClicked}
+        onShareClicked={props.onShareClicked}
+      />
     </SheetWrapper>
-    /* return <DetailedCard hit={hit} onClose={close} /> */
-  }, [hit]);
+  };
 
-  return { show, close, detailedCard };
+  return { show, close, DetailedCardWrapper };
 };
 
 export const DetailedCard = (props : DetailedCardProps) => {

@@ -17,7 +17,7 @@ export const SAVED_LINK_KEY = "saved_posts";
 
 export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 
-  const { show: showDetailedCard, detailedCard } = useDetailedCard();
+  const { show: showDetailedCard, DetailedCardWrapper } = useDetailedCard();
 
   const resourceData = useMemo(() => Resource.fromVITResource(hit), [hit]);
 
@@ -43,7 +43,10 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
 
   return (
     <>
-      {detailedCard}
+      <DetailedCardWrapper
+        onShareClicked={onShareClicked}
+        onSaveClicked={onSaveClicked} />
+
       <div className="relative py-4 px-4 text-white h-full" onClick={onSelectCard}>
         {/* colored overlay */}
         <div className="absolute top-0 right-0 bottom-0 left-0 bg-slate-900/80 z-20" />

@@ -22,9 +22,9 @@ describe("DetailedCard", () => {
 describe("useDetailedCard", () => {
   it("should render null on detailedcard when hit state is null", async () => {
     const Scaffold = () => {
-      const { show, detailedCard } = useDetailedCard();
+      const { show, DetailedCardWrapper } = useDetailedCard();
 
-      return (<div>{detailedCard}</div>);
+      return (<div><DetailedCardWrapper  /></div>);
     };
 
     const { container } = render(<Scaffold />);
@@ -37,13 +37,13 @@ describe("useDetailedCard", () => {
     const hit = mockedResource();
 
     const Scaffold = () => {
-      const { show, detailedCard } = useDetailedCard();
+      const { show, DetailedCardWrapper } = useDetailedCard();
 
       useEffect(() => {
         show({...hit})
       }, []);
 
-      return (<div>{detailedCard}</div>);
+      return (<div><DetailedCardWrapper  /></div>);
     };
 
     const { container, findByText } = render(<Scaffold />);
