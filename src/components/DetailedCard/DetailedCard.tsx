@@ -70,14 +70,14 @@ export const DetailedCard = (props : DetailedCardProps) => {
 
   return (
     <div>
-      <div className="mx-6 py-2"><ActionBar /></div>
+      <div className="mx-6 py-4"><ActionBar /></div>
       <div className="bg-black text-center h-[160px]">
         {resourceData.imageSrc && (
           <img className="inline-block aspect-video h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
         )}
       </div>
-      <div className="mx-6">
-        <h1 className="my-4 mx-0">{resourceData.title}</h1>
+      <div className="mx-6 mb-8 min-h-[100px]">
+        <h1 className="mb-2 mt-4 mx-0 text-2xl">{resourceData.title}</h1>
         <p>{resourceData.description}</p>
       </div>
     </div>
