@@ -26,7 +26,7 @@ const PageTransition = ({ children } : any) => {
     <div className="">
       <AnimatePresence
 	      initial={false}
-	      exitBeforeEnter
+        mode="wait"
 	    >
 	      <motion.div
           key={asPath}
