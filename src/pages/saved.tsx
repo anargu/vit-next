@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { SheetWrapper } from '../components/SheetWrapper/SheetWrapper';
-import NavBar from '../components/NavBar';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
@@ -11,10 +10,8 @@ export const SavedPage = () => {
 
   const [showSaveUrlSheet, setShowSaveUrlSheet] = useState(false);
 
-  const PageWrapper = ({ children } : any) => (
+  const SavedPageWrapper = ({ children } : any) => (
     <>
-      <NavBar/>
-
       <div className="py-4 text-center text-gray-400 text-sm leading-8">
         Wanna save your links? <span
           onClick={(e) => {
@@ -53,22 +50,22 @@ export const SavedPage = () => {
 
   // savedResources is null, it is loading
   if (savedResources === null) return (
-    <PageWrapper>
+    <SavedPageWrapper>
       loading...
-    </PageWrapper>
+    </SavedPageWrapper>
   );
 
   // No Saved Posts
   if (savedResources.length === 0) return (
-    <PageWrapper>
+    <SavedPageWrapper>
       No Saved Posts. Save new ones on Feed section.
-    </PageWrapper>
+    </SavedPageWrapper>
   );
 
   return (
-    <PageWrapper key={savedResources}>
+    <SavedPageWrapper key={savedResources}>
       {SavedPostsList}
-    </PageWrapper>
+    </SavedPageWrapper>
   );
 };
 

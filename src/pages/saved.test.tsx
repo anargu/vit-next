@@ -19,8 +19,6 @@ describe("Saved", () => {
   it("should render empty posts if there are no saved posts", async () => {
     const { findByText } = render(<SavedPage />);
 
-    await findByText("Saved");
-
     await findByText("No Saved Posts. Save new ones on Feed section.")
   });
 

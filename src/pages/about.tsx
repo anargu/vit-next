@@ -1,12 +1,8 @@
-import { useRouter } from 'next/router';
 import React from 'react';
-import NavBar from '../components/NavBar';
 
 export const AboutPage = () => {
   return (
     <div className="bg-emerald-100 text-gray-600">
-      <NavBar/>
-
       <div className="grid gap-2 min-h-[calc(100vh-72px)]">
         <h1 className="text-center py-2">About VIT</h1>
         <div className="leading-tight text-lg max-w-[80%] mx-6 mb-2">
