@@ -3,7 +3,7 @@ import { NotificationsProvider, showNotification as mantineNotification } from '
 import { DefaultMantineColor } from '@mantine/core';
 
 export type NotificationProps = {
-  children?: JSX.Element;
+  children?: React.ReactNode;
 };
 
 export type NotificationOptions = {
