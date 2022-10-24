@@ -55,7 +55,7 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
             value={loading ? "Saving..." : "Save"}
             disabled={loading}
             role="button"
-            className="inline-block bg-yellow-400 text-lg px-6 py-2 rounded disabled:bg-yellow-300" />
+            className="inline-block bg-amber-300 text-lg px-6 py-2 rounded disabled:bg-amber-200" />
         </div>
       </form>
     </div>
