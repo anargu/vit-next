@@ -2,6 +2,7 @@ import { Resource, VITResource } from "../../core/entities";
 import { useMemo } from "react";
 import styled from 'styled-components';
 import Bookmark from "../../../public/assets/bookmark.svg";
+import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 import { BackgroundImage } from "./BackgroundImage";
@@ -75,7 +76,7 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
               e.stopPropagation();
 
               onSaveClicked();
-            }}><Bookmark className={isSaved(hit) ? "filled" : ""} /></span>
+            }}>{isSaved(hit) ? <Trash /> : <Bookmark />}</span>
             <span title="Share Button" onClick={onShareClicked}><Share/></span>
           </ActionsStyled>
         </div>
