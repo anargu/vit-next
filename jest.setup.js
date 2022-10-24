@@ -20,7 +20,7 @@ jest.mock('framer-motion', () => {
   return {
     __esModule: true,
     ...actual,
-    AnimatePresence: ({ children, ...props }) => (
+    AnimatePresence: ({ children, initial, ...props }) => (
       <div {...props} className='mocked-framer-motion-AnimatePresence'>
         { children }
       </div>
