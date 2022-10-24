@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 
 interface NavBarItemMenuProps {
   right?: boolean,
@@ -8,7 +9,7 @@ interface NavBarItemMenuProps {
 
 export const NavBarItemMenu : React.FC<NavBarItemMenuProps> = ({ right, children, menu }) => {
 
-const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -37,8 +38,19 @@ const ref = useRef<HTMLDivElement>(null);
         {menu && (
           <ul className="py-1" aria-labelledby="dropdown">
             {menu.map((item, i) => (
-              <li key={`nav-menu-item-${i}`}>
-                <a href={item.url} className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">{item.label}</a>
+              <li
+                key={`nav-menu-item-${i}`}
+                onClick={(e : any) => {
+                  e.preventDefault?.();
+
+                  setIsOpen(false);
+                }}
+              >
+                <Link href={item.url}>
+                  <span className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    {item.label}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
