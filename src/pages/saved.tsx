@@ -20,7 +20,7 @@ export const SavedPage = () => {
 
             setShowSaveUrlSheet(true);
           }}
-          className="rounded px-2 underline cursor-pointer py-1 text-yellow-400 text-white" title="Save a Link">Save yours here.</span>
+          className="rounded px-2 underline cursor-pointer py-1 text-amber-500 text-white" title="Save a Link">Save yours here.</span>
       </div>
 
       <SheetWrapper show={showSaveUrlSheet} onCloseSheet={() => {setShowSaveUrlSheet(false);}}>
@@ -58,7 +58,9 @@ export const SavedPage = () => {
   // No Saved Posts
   if (savedResources.length === 0) return (
     <SavedPageWrapper>
-      No Saved Posts. Save new ones on Feed section.
+      <div className="mx-4 px-4 py-2 bg-amber-300">
+        No Saved Posts. Save new ones by adding your links.
+      </div>
     </SavedPageWrapper>
   );
 

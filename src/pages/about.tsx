@@ -2,7 +2,7 @@ import React from 'react';
 
 export const AboutPage = () => {
   return (
-    <div className="bg-emerald-100 text-gray-600">
+    <div className="bg-yellow-100 text-gray-600">
       <div className="grid gap-2 min-h-[calc(100vh-72px)]">
         <h1 className="text-center py-2">About VIT</h1>
         <div className="leading-tight text-lg max-w-[80%] mx-6 mb-2">

@@ -19,7 +19,7 @@ describe("Saved", () => {
   it("should render empty posts if there are no saved posts", async () => {
     const { findByText } = render(<SavedPage />);
 
-    await findByText("No Saved Posts. Save new ones on Feed section.")
+    await findByText("No Saved Posts. Save new ones by adding your links.")
   });
 
   it("should list all saved posts", async () => {
@@ -30,7 +30,7 @@ describe("Saved", () => {
 
     const { findByText, queryByText } = render(<SavedPage />);
 
-    expect(queryByText("No Saved Posts. Save new ones on Feed section.")).toBeNull();
+    expect(queryByText("No Saved Posts. Save new ones by adding your links.")).toBeNull();
 
     await findByText(oldPostOne.og_title!);
     await findByText(oldPostTwo.og_title!);

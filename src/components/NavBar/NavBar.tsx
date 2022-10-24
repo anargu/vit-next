@@ -22,7 +22,7 @@ const variants = {
     }
   },
   aboutIn: {
-    backgroundColor: "#d1fae5",
+    backgroundColor: "rgb(254 249 195)",
     transition: {
       duration: 0.75,
       delay: 1.5
@@ -70,7 +70,7 @@ export const NavBar = () => {
         animate={router.pathname === "/about" ? "aboutIn" : "in"}
         initial="out"
         exit="out"
-        className="bg-emerald-100 grid grid-cols-[20px_48px_48px_auto_70px] lg:grid-cols-[24px_96px_96px_auto_70px] items-center h-[72px] px-4"
+        className="bg-emerald-100 grid gap-3 grid-cols-[20px_48px_48px_auto_70px] lg:grid-cols-[24px_96px_96px_auto_70px] items-center h-[72px] px-4"
       >
         <Image src="/assets/v_icon_512px.png" width="24px" height="24px" sizes="(min-width: 1024px) 24px, 20px"/>
         {leftItems.map((item) =>
