@@ -86,9 +86,10 @@ export const DetailedCard = (props : DetailedCardProps) => {
           <img className="inline-block aspect-video h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
         )}
       </div>
-      <div className="mx-6 mb-8 min-h-[100px]">
+      <div className="relative mx-6 mb-8 min-h-[100px] max-h-[300px] overflow-hidden">
         <h1 className="mb-2 mt-4 mx-0 text-2xl">{resourceData.title}</h1>
         <p>{resourceData.description}</p>
+        <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-white"></div>
       </div>
     </div>
   );
