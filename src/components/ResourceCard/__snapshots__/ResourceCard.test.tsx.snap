@@ -46,9 +46,7 @@ exports[`ResourceCard renders the component 1`] = `
           class="relative z-20"
           title="Save Button"
         >
-          <svg
-            class=""
-          />
+          <svg />
         </span>
         <span
           title="Share Button"
