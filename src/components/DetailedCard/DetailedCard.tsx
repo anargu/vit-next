@@ -1,13 +1,15 @@
 import { Resource, VITResource } from "@/src/core/entities";
-import { ReactNode, useMemo, useState } from "react";
+import { MutableRefObject, ReactNode, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
+import { useOnClickOutside } from "@/src/hooks/useOnClickOutside";
 
 export type DetailedCardProps = {
   hit: VITResource,
+  innerRef: MutableRefObject<HTMLDivElement>,
   isSaved?: boolean,
   onSaveClicked?: () => void,
   onShareClicked?: () => void,
@@ -36,12 +38,17 @@ export const useDetailedCard = () => {
   const close = () => setHit(null);
 
   const DetailedCardWrapper = (props : DetailedCardWrapperProps) => {
+    const detailedCardRef = useRef<any>(null);
+
+    useOnClickOutside(detailedCardRef, () => close());
+
     if (!hit) return null;
 
     return <SheetWrapper
       show={true}
       onCloseSheet={close}>
       <DetailedCard
+        innerRef={detailedCardRef}
         hit={hit}
         isSaved={props.isSaved}
         onSaveClicked={props.onSaveClicked}
@@ -79,7 +86,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
   );
 
   return (
-    <div>
+    <div ref={props.innerRef}>
       <div className="mx-6 py-4"><ActionBar /></div>
       <div className="bg-black text-center h-[160px]">
         {resourceData.imageSrc && (
