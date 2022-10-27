@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { showNotification } from '../Notification/Notification';
 
 export type SubmitLinkFormProps = {
+  showLabel?: boolean,
   onSubmitWithData: (link : string) => Promise<void>,
 };
 
@@ -32,30 +33,36 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
   };
 
   return (
-    <div className="pb-8 pt-8 px-4 min-h-[280px]">
+    <div className="px-4">
       <form onSubmit={handleSubmit(onSubmitCutomLink)}>
-        <div className="mb-8">
+        <div className="">
           <div className="pb-3">
-            <label className="text-xl" htmlFor="custom-url-input">Insert URL you want to save</label>
+            {props.showLabel && 
+              <label className="text-md" htmlFor="custom-url-input">Insert URL you want to save</label>
+            }
           </div>
-          <input
-            id="custom-url-input"
-            type="text"
-            autoFocus
-            disabled={loading}
-            placeholder="Paste or type url"
-            className="bg-slate-200 rounded outline-none py-2 px-2 w-full disabled:text-gray-500"
-            {...register("inputLink", { required: true })}
-          />
+          <div className="grid grid-cols-[auto_96px]">
+            <input
+              id="custom-url-input"
+              type="text"
+              autoFocus
+              disabled={loading}
+              placeholder="Paste or type url"
+              className="bg-slate-200 rounded outline-none py-2 px-2 w-full disabled:text-gray-500"
+              {...register("inputLink", { required: true })}
+            />
+
+            <div className="text-right">
+              <input
+                type="submit"
+                value={loading ? "Saving..." : "Save"}
+                disabled={loading}
+                role="button"
+                className="bg-amber-300 text-md px-6 py-2 rounded disabled:bg-amber-200 h-full" />
+            </div>
+
+          </div>
           { errors.inputLink && <span className="text-red-500">Error </span> }
-        </div>
-        <div className="text-right">
-          <input
-            type="submit"
-            value={loading ? "Saving..." : "Save"}
-            disabled={loading}
-            role="button"
-            className="inline-block bg-amber-300 text-lg px-6 py-2 rounded disabled:bg-amber-200" />
         </div>
       </form>
     </div>

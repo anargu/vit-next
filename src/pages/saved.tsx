@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from 'react';
-import { SheetWrapper } from '../components/SheetWrapper/SheetWrapper';
+import React, { useMemo } from 'react';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
@@ -8,29 +7,22 @@ export const SavedPage = () => {
 
   const { savedResources, saveResource } = useSavedResources();
 
-  const [showSaveUrlSheet, setShowSaveUrlSheet] = useState(false);
-
   const SavedPageWrapper = ({ children } : any) => (
     <>
-      <div className="py-4 text-center text-gray-400 text-sm leading-8">
-        Wanna save your links? <span
-          onClick={(e) => {
-            // opens sheet 
-            e.stopPropagation();
-
-            setShowSaveUrlSheet(true);
-          }}
-          className="rounded px-2 underline cursor-pointer py-1 text-amber-500 text-white" title="Save a Link">Save yours here.</span>
-      </div>
-
-      <SheetWrapper show={showSaveUrlSheet} onCloseSheet={() => {setShowSaveUrlSheet(false);}}>
-        <SubmitLinkForm
-          onSubmitWithData={async (link) => {
-            await saveResource(link);
-            setShowSaveUrlSheet?.(false);
-          }}
-        />
-      </SheetWrapper>
+      <div className="py-4 text-sm leading-8">
+        <div className="text-center text-gray-400">
+          Wanna save your links? <span
+            className="rounded px-2 cursor-pointer py-1 text-amber-500 text-white" title="Save a Link">Save yours here below.</span>
+        </div>
+        <div>
+          <SubmitLinkForm
+            showLabel={false}
+            onSubmitWithData={async (link) => {
+              await saveResource(link);
+            }}
+          />
+        </div>
+      </div> 
 
       <div className="min-h-[calc(100vh-72px)]">
         {children}
