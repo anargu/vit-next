@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const SavedPage = () => {
 
@@ -33,11 +34,20 @@ export const SavedPage = () => {
   const SavedPostsList = useMemo(() => {
     if (!savedResources) return null;
 
-    return savedResources.map((resource, index) => (
-      <div key={`resource-${index}`}>
-        <ResourceCard hit={resource} onSaveResource={saveResource}></ResourceCard>
-      </div>
-    ))
+    return (
+      <AnimatePresence>
+        {savedResources.map((resource, index) => (
+          <motion.div
+            key={`resource-${index}`}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ResourceCard hit={resource} onSaveResource={saveResource}></ResourceCard>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    );
   }, [savedResources]);
 
   // savedResources is null, it is loading
