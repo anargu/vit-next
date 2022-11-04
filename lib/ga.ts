@@ -1,6 +1,11 @@
 
+type EventGA = {
+  action : string,
+  params : any,
+}
+
 // log specific events happening.
-export const event = ({ action, params }) => {
+export const event = ({ action, params } : EventGA) => {
   if (typeof window === "undefined") return;
 
   window.gtag('event', action, params)
