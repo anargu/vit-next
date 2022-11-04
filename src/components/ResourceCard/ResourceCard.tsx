@@ -65,10 +65,10 @@ export const ResourceCard = ({ hit, onSaveResource } : ResourceCardProps) => {
           <div className="text-right"><span>{resourceData.timeAgo.toString()}</span></div>
 
           <p className={`py-0 max-h-[calc(2.5rem*4)]
-            text-3xl text-multiline-overflow-mixin
+            text-xl text-multiline-overflow-mixin
             text-ellipsis [-webkit-line-clamp:4]`}>{resourceData.title}</p>
 
-          <p className="self-center max-h-[calc(2rem*4)] text-2xl text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]">{resourceData.description}</p>
+          <p className="self-center max-h-[calc(2rem*4)] text-lg text-multiline-overflow-mixin text-ellipsis [-webkit-line-clamp:2]">{resourceData.description}</p>
           <ActionsStyled className="flex justify-around">
             {/* Remove <Link /> Icon If a third action is unneeded */}
             {/* <Link/> */}
