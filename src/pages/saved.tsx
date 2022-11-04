@@ -3,6 +3,9 @@ import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ga, ON_CLICK_SAVE_POST_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from '../../lib/ga';
+
+const DOMAIN_REGEX = /^(?:\/\/|[^\/]+)*/;
 
 export const SavedPage = () => {
 
@@ -19,7 +22,16 @@ export const SavedPage = () => {
           <SubmitLinkForm
             showLabel={false}
             onSubmitWithData={async (link) => {
+              ga.event({ action: ON_CLICK_SAVE_POST_EVENT, params: {} });
+
               await saveResource(link);
+
+              const domain = link.match(DOMAIN_REGEX)?.[0];
+
+              ga.event({
+                action: SAVE_POST_SUCESSFULLY_EVENT,
+                params: { domain: domain }
+              });
             }}
           />
         </div>
@@ -35,18 +47,20 @@ export const SavedPage = () => {
     if (!savedResources) return null;
 
     return (
-      <AnimatePresence>
-        {savedResources.map((resource, index) => (
-          <motion.div
-            key={`resource-${index}`}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <ResourceCard hit={resource} onSaveResource={saveResource}></ResourceCard>
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      <div className="grid grid-cols-2">
+        <AnimatePresence>
+          {savedResources.map((resource, index) => (
+            <motion.div
+              key={`resource-${index}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <ResourceCard hit={resource} onSaveResource={saveResource}></ResourceCard>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     );
   }, [savedResources]);
 
