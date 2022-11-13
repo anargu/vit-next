@@ -137,48 +137,7 @@ describe("ResourceCard", () => {
     // });
 
     describe("Save", () => {
-
-      it("post is saved on local storage among others previous saved posts when save button is clicked", async () => {
-        const oldPost = mockedResource();
-        localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([oldPost]));
-
-        const newPost = mockedResource();
-
-        const WrapperResourceCard = () => {
-          const { saveResource } = useSavedResources();
-
-          return (
-            <ResourceCard onSaveResource={saveResource} hit={newPost} />
-          )
-        };
-
-        const { findByTitle, findByText } = render(
-          <MantineProvider>
-            <WithNotificationsProvider>
-              <WrapperResourceCard/>
-            </WithNotificationsProvider>
-          </MantineProvider>
-        );
-
-        await act(async () => {
-          const saveButtonEl = await findByTitle("Save Button");
-          saveButtonEl.click();
-        });
-
-        await findByText("Link saved locally.");
-        const value = localStorage.getItem(SAVED_LINK_KEY);
-        expect(value).not.toBeFalsy();
-        expect(value).not.toBeNull();
-
-        const actualSavedPosts = JSON.parse(value!)
-        expect(actualSavedPosts).toHaveLength(2);
-        expect(actualSavedPosts[0]).toStrictEqual(oldPost);
-        expect(actualSavedPosts[1]).toStrictEqual(newPost);
-      });
-
       it("post is saved on empty local storage when save button is clicked ", async () => {
-        localStorage.removeItem(SAVED_LINK_KEY);
-
         const WrapperResourceCard = () => {
           const { saveResource } = useSavedResources();
 
@@ -202,8 +161,7 @@ describe("ResourceCard", () => {
 
         // Check if Notification is shown.
         await findByText("Link saved locally.");
-        const value = localStorage.getItem(SAVED_LINK_KEY);
-        expect(value).not.toBeFalsy();
+        /* expect(value).not.toBeFalsy(); */
       });
 
       afterEach(() => {
