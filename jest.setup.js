@@ -36,3 +36,39 @@ jest.mock('framer-motion', () => {
   };
 });
 
+jest.mock('./src/firebase/index.ts', () => {
+  return {
+    app: {},
+    auth: {},
+    getRedirectResult: async (a, b) => { return null },
+  };
+});
+
+jest.mock('./src/services/datasource.ts', () => {
+  return {
+    fetchUser: jest.fn(),
+    fetchUserLinks: jest.fn(),
+    listenLinksFromUser: jest.fn(),
+    insertLink: jest.fn(),
+    migrateLocalData: jest.fn(),
+    unsaveLink: jest.fn(),
+  };
+});
+
+jest.mock('./src/services/auth.ts', () => {
+  return {
+    signIn: jest.fn(),
+    getSignInResult: jest.fn(),
+    upserUser: jest.fn(),
+  };
+});
+
+jest.mock("./src/hooks/useAuth", () => {
+  return ({
+    useAuth: () => ({
+      isAuthenticated: false,
+      authUser: null,
+    })
+  })
+});
+
