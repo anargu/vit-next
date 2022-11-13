@@ -1,15 +1,15 @@
 import Head from 'next/head'
-import { SavedPage } from '@/src/pages/saved'
+import { LoginPage } from '@/src/pages/login'
 import { SEO } from '@/src/core/constants'
 
 export default function Saved() {
   return (
     <div>
       <Head>
-        <title>Saved Posts - {SEO.commonTitlePhrase}</title>
+        <title>Login - {SEO.titleVITPhrase}</title>
       </Head>
-      
-      <SavedPage/>
+
+      <LoginPage/>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import NavBar from '@/src/components/NavBar';
 import { WithNotificationsProvider } from '@/src/components/Notification/Notification'
 import '@/styles/global.css'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { useRouter } from 'next/router';
 import Script from 'next/script'
 import { useEffect } from 'react';
@@ -32,6 +33,10 @@ export default function VITApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
