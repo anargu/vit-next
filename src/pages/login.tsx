@@ -1,22 +1,23 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { CircularLoader } from "../components/Loaders";
 import { showDefaultNotification } from "../components/Notification/Notification";
-import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { VITResource } from "../core/entities";
-import { AuthenticatedUser, getSignInResult, signIn, upsertUser } from "../services/auth";
+import { getSignInResult, signIn, upsertUser } from "../services/auth";
 import { migrateLocalData } from "../services/datasource";
 
 export const LoginPage = () => {
   const router = useRouter();
 
   const [hasError, setHasError] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSignInResult = async () => {
       try {
+        setIsLoading(true);
         const authenticatedUser = await getSignInResult();
 
-        if (!authenticatedUser) return;
+        if (!authenticatedUser) return setIsLoading(false);
 
         // Creates user
         await upsertUser(authenticatedUser);
@@ -29,17 +30,21 @@ export const LoginPage = () => {
           );
         }
 
+        setIsLoading(false);
+
         return await router.push("/");
       } catch (error) {
         console.error(`>>> error ${error}`);
         setHasError(error);
       }
+
+      setIsLoading(false);
     };
 
     fetchSignInResult();
   }, []);
 
-  return <div className="h-screen flex justify-center items-center">
+  return <div className="h-screen flex flex-col justify-center items-center">
     <button
       onClick={(e) => {
         e.preventDefault();
@@ -58,6 +63,14 @@ export const LoginPage = () => {
           <span className="font-medium">Oops! there is an Error:</span> {hasError?.message ?? "Please try again"}
       </div>)
     : null}
+
+    {isLoading
+    ? (<div className="p-4 mb-4 text-sm text-stone-800 bg-amber-300 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+          <span className="font-regular">We are syncing your data. Please wait a moment.</span>
+          <span className="px-2"><CircularLoader size="18px" colorClassname="text-stone-800" /></span>
+      </div>)
+    : null}
+
   </div>;
 }
 
