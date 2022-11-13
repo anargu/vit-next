@@ -1,7 +1,7 @@
 import { ONE_DAY_IN_MILLIS, ONE_HOUR_IN_MILLIS, ONE_MINUTE_IN_MILLIS, ONE_MONTH_IN_MILLIS } from "./constants";
 
 export interface VITResource {
-  id: string;
+  id?: string;
   og_image : string | null,
   keyphrase : string | null,
   date_created : string,
@@ -20,7 +20,7 @@ export class Resource {
   title : string | null;
   description : string | null;
 
-  constructor({ id, og_image, keyphrase, date_created, og_title, url_title, og_description, url } : VITResource) {
+  constructor(id : string, { og_image, keyphrase, date_created, og_title, url_title, og_description, url } : VITResource) {
     this.id = id;
     this.imageSrc = og_image;
     this.imageAlt = keyphrase;
@@ -35,7 +35,7 @@ export class Resource {
   };
 
   static fromVITResource (data : VITResource) : Resource {
-    return new Resource(data);
+    return new Resource("", data);
   };
 };
 
@@ -75,4 +75,16 @@ export class SinceDatetimeField {
 
   toString () : string { return this.value; }
 }
+
+export interface User {
+  id : string;
+  email : string;
+  displayName : string;
+}
+
+export interface Link {
+  isDeleted : boolean;
+}
+
+
 

@@ -1,14 +1,25 @@
-import { APIResponse } from "@/pages/api/entities";
-import { MetascrapperResponse } from "@/pages/api/metadata";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { VITResource } from "../core/entities";
+import { Resource, VITResource } from "../core/entities";
+import { fetchMetadataFromURL, insertLink, unsaveLink } from "../services/datasource";
+import { useAuth } from "./useAuth";
+import { useLinks } from "./useLinks";
 
 export type SaveResult = {
   isAlreadySaved: boolean,
 };
 
 export const useSavedResources = () => {
+
+  const { authUser } = useAuth();
+
+  const { userLinks } = useLinks(authUser);
+
+  const savedResourcesV2 = useMemo<VITResource[] | null>(() => {
+    if (!userLinks) return null;
+
+    return userLinks;
+  }, [userLinks]);
 
   const [savedResources, setSavedResources] = useState<null | VITResource[]>(null);
 
@@ -27,56 +38,24 @@ export const useSavedResources = () => {
   const saveResource = async (resource : string | VITResource) : Promise<SaveResult> => {
     const isStringUrl = typeof resource === "string";
 
-    let resourceMetadata = null;
+    let resourceMetadata : VITResource | null = null;
 
     if (isStringUrl) {
-      const response = await fetch(`/api/metadata?url=${resource}`);
-      resourceMetadata = await response.json() as APIResponse;
+      resourceMetadata = await fetchMetadataFromURL(resource);
     }
 
-    // Fetch all posts.
-    const rawData = localStorage.getItem(SAVED_LINK_KEY) ?? "[]";
-    
-    const savedPosts : VITResource[] = JSON.parse(rawData);
-
-    const resourceIndex = savedPosts.findIndex((vitPost) => (isStringUrl ? resource === vitPost.url : resource.url === vitPost.url));
-
-    const isAlreadySaved = resourceIndex !== -1;
-
-    let updatedSavedPosts : VITResource[];
-
-    if (isAlreadySaved) {
-      // Delete the post.
-      updatedSavedPosts = savedPosts.filter((_, index) => index !== resourceIndex);
-    } else {
-      // Append the post.
-      updatedSavedPosts = [
-        ...savedPosts,
-        !isStringUrl
-        ? resource
-        : !!resourceMetadata && resourceMetadata.isOk
-        ? {
-            id: (resourceMetadata.data as MetascrapperResponse)?.url ,
-            date_created: new Date().toISOString(),
-            url: (resourceMetadata.data as MetascrapperResponse)?.url,
-            url_title: (resourceMetadata.data as MetascrapperResponse)?.title,
-            og_image: (resourceMetadata.data as MetascrapperResponse)?.image,
-            og_title: (resourceMetadata.data as MetascrapperResponse)?.title,
-            og_description: (resourceMetadata.data as MetascrapperResponse)?.description,
-          } as VITResource
-        : {
-            url: resource,
-            url_title: resource,
-            id: resource,
-        } as VITResource
-      ];
+    let isAlreadySaved = false;
+    if (!isStringUrl && userLinks?.find((link) => link.id === resource.id)) {
+      isAlreadySaved = true;
     }
 
-    localStorage.setItem(SAVED_LINK_KEY, JSON.stringify(updatedSavedPosts));
+    const operationPromise = isAlreadySaved
+      ? unsaveLink((resource as VITResource).id!)
+      : insertLink(resourceMetadata!, authUser!);
 
-    setSavedResources([...updatedSavedPosts]);
+    await operationPromise;
 
-    return { isAlreadySaved };
+    return { isAlreadySaved: false };
   };
 
   const isSaved = (hit : VITResource) => {
@@ -87,5 +66,5 @@ export const useSavedResources = () => {
     return !!found
   };
 
-  return { savedResources, saveResource, isSaved };
+  return { savedResourcesV2, saveResource, isSaved, savedResources, unsaveLink };
 };

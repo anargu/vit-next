@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
@@ -9,7 +9,7 @@ const DOMAIN_REGEX = /^(?:\/\/|[^\/]+)*/;
 
 export const SavedPage = () => {
 
-  const { savedResources, saveResource } = useSavedResources();
+  const { savedResourcesV2, saveResource } = useSavedResources();
 
   const SavedPageWrapper = ({ children } : any) => (
     <>
@@ -44,12 +44,12 @@ export const SavedPage = () => {
   );
 
   const SavedPostsList = useMemo(() => {
-    if (!savedResources) return null;
+    if (!savedResourcesV2) return null;
 
     return (
       <div className="grid grid-cols-2">
         <AnimatePresence>
-          {savedResources.map((resource, index) => (
+          {savedResourcesV2.map((resource, index) => (
             <motion.div
               key={`resource-${index}`}
               initial={{ opacity: 0, scale: 0 }}
@@ -62,17 +62,17 @@ export const SavedPage = () => {
         </AnimatePresence>
       </div>
     );
-  }, [savedResources]);
+  }, [savedResourcesV2]);
 
   // savedResources is null, it is loading
-  if (savedResources === null) return (
+  if (savedResourcesV2 === null) return (
     <SavedPageWrapper>
       loading...
     </SavedPageWrapper>
   );
 
   // No Saved Posts
-  if (savedResources.length === 0) return (
+  if (savedResourcesV2.length === 0) return (
     <SavedPageWrapper>
       <div className="mx-4 px-4 py-2 bg-amber-300">
         No Saved Posts. Save new ones by adding your links.
@@ -81,7 +81,7 @@ export const SavedPage = () => {
   );
 
   return (
-    <SavedPageWrapper key={savedResources}>
+    <SavedPageWrapper>
       {SavedPostsList}
     </SavedPageWrapper>
   );
