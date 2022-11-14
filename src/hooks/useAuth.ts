@@ -9,23 +9,21 @@ export function useAuth () {
   const [authUser, setAuthUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (isAuthenticated) return;
-
     const unSub = onAuthStateChanged(auth, (firebaseUser) => {
-      if (!firebaseUser) return;
+      const hasLoggedUser = !!firebaseUser;
 
-      const authUser : User = {
+      const authUser : User | null = hasLoggedUser ? {
         id: firebaseUser!.uid,
         email: firebaseUser!.email!,
         displayName: firebaseUser!.displayName!,
-      };
+      } : null;
 
-      setIsAuthenticated(!!authUser);
-      setAuthUser(authUser);
+      setIsAuthenticated(hasLoggedUser);
+      setAuthUser(hasLoggedUser ? authUser : null);
     });
 
     return () => unSub && unSub();
-  }, [isAuthenticated]);
+  }, []);
 
   return {
     isAuthenticated,
