@@ -14,6 +14,10 @@ const signIn = async () => {
   await signInWithRedirect(auth, googleProvider)
 };
 
+const logOut = async () => {
+  await auth.signOut();
+};
+
 const getSignInResult = async () => {
   return new Promise<AuthenticatedUser | null>((resolve, reject) => {
     getRedirectResult(auth)
@@ -66,5 +70,6 @@ export {
   signIn,
   getSignInResult,
   upsertUser,
+  logOut,
 };
 
