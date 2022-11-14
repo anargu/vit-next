@@ -12,7 +12,6 @@ export interface VITResource {
 };
 
 export class Resource {
-
   id : string;
   imageSrc : string | null;
   imageAlt : string | null;

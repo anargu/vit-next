@@ -47,7 +47,6 @@ jest.mock('./src/firebase/index.ts', () => {
 jest.mock('./src/services/datasource.ts', () => {
   return {
     fetchUser: jest.fn(),
-    fetchUserLinks: jest.fn(),
     listenLinksFromUser: jest.fn(),
     insertLink: jest.fn(),
     migrateLocalData: jest.fn(),

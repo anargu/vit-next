@@ -14,16 +14,6 @@ const fetchUser = async (id : string) : Promise<User> => {
   return user as User;
 };
 
-const fetchUserLinks = async (id : string) => {
-  const linksRef = collection(firestore, `links`);
-
-  const q = query(linksRef, where("userId", "==", id))
-
-  const userLinksSnap = await getDocs(q);
-
-  return userLinksSnap.docs;
-};
-
 const listenLinksFromUser = (
   id : string,
   onSnapshotCallback : (snapshot : QuerySnapshot<DocumentData>) => void
@@ -121,7 +111,6 @@ const unsaveLink = async (linkId : string) => {
 
 export {
   fetchUser,
-  fetchUserLinks,
   listenLinksFromUser,
   insertLink,
   unsaveLink,
