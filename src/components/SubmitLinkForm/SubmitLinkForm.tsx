@@ -4,7 +4,7 @@ import { showNotification } from '../Notification/Notification';
 
 export type SubmitLinkFormProps = {
   showLabel?: boolean,
-  onSubmitWithData: (link : string) => Promise<void>,
+  onSubmitWithData: (link : string) => Promise<any | null>,
 };
 
 export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
@@ -20,16 +20,19 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
   const onSubmitCutomLink : SubmitHandler<SubmitFormTypes> = async (data) => {
     setLoading(true);
 
-    await props.onSubmitWithData?.(data.inputLink);
+    const error = await props.onSubmitWithData?.(data.inputLink);
 
+    setLoading(false);
+
+    if (error) return;
+    
     showNotification("New Link Saved", "Success", {
       color: "green"
-    })
+    });
 
     reset();
 
 
-    setLoading(false);
   };
 
   return (

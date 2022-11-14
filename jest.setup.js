@@ -64,10 +64,10 @@ jest.mock('./src/services/auth.ts', () => {
 
 jest.mock("./src/hooks/useAuth", () => {
   return ({
-    useAuth: () => ({
+    useAuth: jest.fn(() => ({
       isAuthenticated: false,
       authUser: null,
-    })
+    })),
   })
 });
 

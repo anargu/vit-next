@@ -5,36 +5,52 @@ export interface VITResource {
   og_image : string | null,
   keyphrase : string | null,
   date_created : string,
+  date_updated? : string,
   og_title : string | null,
   og_description : string | null,
   url_title: string | null,
-  url: string | null,
+  url: string,
+  deleted? : boolean,
 };
 
 export class Resource {
-  id : string;
+  id : string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  postedAt : Date;
+  deleted: boolean;
+
+  url: string;
   imageSrc : string | null;
   imageAlt : string | null;
-  postedAt : Date;
   title : string | null;
   description : string | null;
 
-  constructor(id : string, { og_image, keyphrase, date_created, og_title, url_title, og_description, url } : VITResource) {
-    this.id = id;
-    this.imageSrc = og_image;
-    this.imageAlt = keyphrase;
-    // Input date_created is in ISO 8601 date format/
+  constructor({ id, deleted, og_image, keyphrase, date_created, date_updated, og_title, url_title, og_description, url } : VITResource) {
+    this.id = id ?? null;
     this.postedAt = new Date(date_created);
+    this.createdAt = new Date(date_created);
+    this.updatedAt = date_updated ? new Date(date_updated) : new Date();
+    this.deleted = deleted ?? false;
+
+    this.imageSrc = og_image;
+    this.imageAlt = keyphrase ?? null;
+
+    this.url = url;
     this.title = og_title ?? url_title ?? url;
     this.description = og_description;
   }
 
+  get isRegistered() : boolean {
+    return this.id !== null;
+  };
+
   get timeAgo() : SinceDatetimeField {
-    return new SinceDatetimeField(this.postedAt);
+    return new SinceDatetimeField(this.createdAt);
   };
 
   static fromVITResource (data : VITResource) : Resource {
-    return new Resource("", data);
+    return new Resource(data);
   };
 };
 
@@ -82,10 +98,5 @@ export interface User {
 }
 
 export type AuthenticatedUser = User;
-
-export interface Link {
-  isDeleted : boolean;
-}
-
 
 

@@ -1,18 +1,22 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ga, ON_CLICK_SAVE_POST_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from '../../lib/ga';
-
-const DOMAIN_REGEX = /^(?:\/\/|[^\/]+)*/;
+import { useDetailedCard } from '../components/DetailedCard/DetailedCard';
 
 export const SavedPage = () => {
 
   const { savedResourcesV2, saveResource } = useSavedResources();
 
+  const { show: showDetailedCard, DetailedCardWrapper } = useDetailedCard();
+
   const SavedPageWrapper = ({ children } : any) => (
     <>
+      <DetailedCardWrapper
+        isSaved={true}
+        onSaveClicked={saveResource} />
+
       <div className="py-4 text-sm leading-8">
         <div className="text-center text-gray-400">
           Wanna save your links? <span
@@ -21,17 +25,8 @@ export const SavedPage = () => {
         <div>
           <SubmitLinkForm
             showLabel={false}
-            onSubmitWithData={async (link) => {
-              ga.event({ action: ON_CLICK_SAVE_POST_EVENT, params: {} });
-
-              await saveResource(link);
-
-              const domain = link.match(DOMAIN_REGEX)?.[0];
-
-              ga.event({
-                action: SAVE_POST_SUCESSFULLY_EVENT,
-                params: { domain: domain }
-              });
+            onSubmitWithData={async (link : string) => {
+              return await saveResource(link);
             }}
           />
         </div>
@@ -40,6 +35,7 @@ export const SavedPage = () => {
       <div className="min-h-[calc(100vh-72px)]">
         {children}
       </div>
+
     </>
   );
 
@@ -56,7 +52,12 @@ export const SavedPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
             >
-              <ResourceCard hit={resource} onSaveResource={saveResource}></ResourceCard>
+              <ResourceCard
+                resource={resource}
+                isSaved={true}
+                onSaveResource={saveResource}
+                onShowDetailedCard={(resource) => showDetailedCard(resource)}
+              />
             </motion.div>
           ))}
         </AnimatePresence>

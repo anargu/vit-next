@@ -19,7 +19,7 @@ export const patternPostedAt = /\d+\s(m|h|hours?|days?|months?|years?)\sago/;
 
 describe("ResourceCard", () => {
 
-  const mockedResource = () : VITResource => ({
+  const mockedVITResource = () : VITResource => ({
     id: faker.datatype.uuid(),
     og_image: "https://source.unsplash.com/random/50x50",
     keyphrase: faker.lorem.sentence(5),
@@ -31,24 +31,30 @@ describe("ResourceCard", () => {
   });
 
   it("renders the component", async  () => {
-    const { container } = render(<ResourceCard hit={mockedResource()} />);
+    const { container } = render(<ResourceCard hit={mockedVITResource()} />);
     expect(container).toMatchSnapshot();
   });
 
   it("should appear DetailedCard Fullscreen Dialog when user taps on card", async  () => {
-    const resourceData = { ...mockedResource() };
-    const { findByText, container } = render(<ResourceCard hit={resourceData} />);
+    const resourceData = { ...mockedVITResource() };
+
+    const onShowDetailedCardMock = jest.fn();
+
+    const { container } = render(
+      <>
+        <ResourceCard hit={resourceData} onShowDetailedCard={onShowDetailedCardMock} />
+      </>
+    );
 
     const resourceCard = container.firstElementChild;
     userEvent.click(resourceCard!);
 
-    const element = await findByText("Visit Site");
-    expect(element).not.toBeNull();
+    expect(onShowDetailedCardMock).toHaveBeenCalled();
   });
 
   describe("image field", () => {
     it("displays an image", async  () => {
-      const resourceData = { ...mockedResource() };
+      const resourceData = { ...mockedVITResource() };
       const { findByRole } = render(<ResourceCard hit={resourceData} />);
 
       const imageElement = findByRole("img");
@@ -56,7 +62,7 @@ describe("ResourceCard", () => {
     });
 
     it("renders no image if there is not src url", async  () => {
-      const resourceData = { ...mockedResource(), og_image: null, keyphrase: null };
+      const resourceData = { ...mockedVITResource(), og_image: null, keyphrase: null };
       const { container } = render(<ResourceCard hit={resourceData} />);
 
       const results = container.querySelectorAll("img");
@@ -69,7 +75,7 @@ describe("ResourceCard", () => {
 
     it("displays title", async () => {
 
-      const resourceData = mockedResource();
+      const resourceData = mockedVITResource();
 
       const { findByText } = render(<ResourceCard hit={resourceData} />);
 
@@ -80,7 +86,7 @@ describe("ResourceCard", () => {
 
     it("displays url_title if title is null", async () => {
       const URL_TITLE = "this is a URL title";
-      const hit : VITResource = { ...mockedResource(), og_title: null, url_title: URL_TITLE };
+      const hit : VITResource = { ...mockedVITResource(), og_title: null, url_title: URL_TITLE };
 
       const { findByText } = render(<ResourceCard hit={hit} />);
 
@@ -91,7 +97,7 @@ describe("ResourceCard", () => {
 
     it("displays url if title and url_title are not set", async () => {
       const URL = "https://www.google.com";
-      const hit : VITResource = { ...mockedResource(), og_title: null, url_title: null, url: URL };
+      const hit : VITResource = { ...mockedVITResource(), og_title: null, url_title: null, url: URL };
 
       const { findByText } = render(<ResourceCard hit={hit} />);
 
@@ -104,7 +110,7 @@ describe("ResourceCard", () => {
   describe("field postedAt", () => {
 
     it("displays \"now\" when postedAt diff with current time is lower than a minute", async () => {
-      const hit = mockedResource();
+      const hit = mockedVITResource();
       hit.date_created = new Date().toISOString();
 
       const { findByText } = render(<ResourceCard hit={hit} />);
@@ -115,7 +121,7 @@ describe("ResourceCard", () => {
     });
 
     it("displays created time diff with current time if diff is greater than a minute ", async () => {
-      const hit = mockedResource();
+      const hit = mockedVITResource();
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 
@@ -130,23 +136,19 @@ describe("ResourceCard", () => {
 
   describe("Actions", () => {
 
-    // it("display a more detailed page when clicked on card but not ", async () => {
-    //   const { findByText } = render(<ResourceCard hit={mockedResource()} />);
-    //
-    //   expect(await findByText("Visit site")).not.toBeFalsy();
-    // });
-
     describe("Save", () => {
       it("post is saved on empty local storage when save button is clicked ", async () => {
-        const WrapperResourceCard = () => {
-          const { saveResource } = useSavedResources();
+        const saveResourceMock = jest.fn().mockImplementation(() => {
+          return Promise.resolve(null);
+        });
 
+        const WrapperResourceCard = () => {
           return (
-            <ResourceCard onSaveResource={saveResource} hit={mockedResource()} />
+            <ResourceCard onSaveResource={saveResourceMock} hit={mockedVITResource()} />
           )
         };
 
-        const { findByTitle, findByText } = render(
+        const { findByTitle } = render(
           <MantineProvider>
             <WithNotificationsProvider>
               <WrapperResourceCard/>
@@ -160,8 +162,8 @@ describe("ResourceCard", () => {
         });
 
         // Check if Notification is shown.
-        await findByText("Link saved locally.");
-        /* expect(value).not.toBeFalsy(); */
+        /* await findByText("Link saved locally."); */
+        expect(saveResourceMock).toHaveBeenCalled();
       });
 
       afterEach(() => {
@@ -173,7 +175,7 @@ describe("ResourceCard", () => {
       jest.spyOn(navigator.clipboard, "writeText");
 
       it("link is copied on clipboard when share button is clicked ", async () => {
-        const hit = mockedResource();
+        const hit = mockedVITResource();
         hit.date_created = new Date().toISOString();
 
         const { findByTitle } = render(<ResourceCard hit={hit} />);

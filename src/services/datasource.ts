@@ -1,9 +1,9 @@
 import { APIResponse } from "@/pages/api/entities";
 import { MetascrapperResponse } from "@/pages/api/metadata";
 import { firestore } from "../firebase";
-import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, getDocs, onSnapshot, query, QuerySnapshot, where } from "firebase/firestore";
+import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where } from "firebase/firestore";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { AuthenticatedUser, User, VITResource } from "../core/entities";
+import { AuthenticatedUser, Resource, User, VITResource } from "../core/entities";
 
 const fetchUser = async (id : string) : Promise<User> => {
   const userRef = doc(firestore, `users/${id}`);
@@ -27,12 +27,13 @@ const listenLinksFromUser = (
   return unSub;
 };
 
-const insertLink = async (data : VITResource, by : User) => {
+const insertLink = async (data : Resource, by : User) => {
   const linksRef = collection(firestore, `links`);
 
   let modifiedData : any = { ...data };
   delete modifiedData?.id;
 
+  // TODO: Transform datetime fields
   await addDoc(linksRef, {
     ...modifiedData,
     deleted: false,
@@ -44,26 +45,26 @@ const insertLink = async (data : VITResource, by : User) => {
   });
 };
 
-const fetchMetadataFromURL = async (url : string) : Promise<VITResource> => {
+const fetchMetadataFromURL = async (url : string) : Promise<Resource> => {
 
   const response = await fetch(`/api/metadata?url=${url}`);
   const resourceMetadata = await response.json() as APIResponse;
 
-  if (!resourceMetadata.isOk) return ({
+  if (!resourceMetadata.isOk) return new Resource({
     url: url,
     url_title: url,
-  }) as VITResource
+  } as VITResource)
 
-  return ({
+  return new Resource({
     date_created: new Date().toISOString(),
     url: (resourceMetadata.data as MetascrapperResponse)?.url,
     url_title: (resourceMetadata.data as MetascrapperResponse)?.title,
     og_image: (resourceMetadata.data as MetascrapperResponse)?.image,
+    keyphrase: (resourceMetadata.data as MetascrapperResponse)?.image,
     og_title: (resourceMetadata.data as MetascrapperResponse)?.title,
     og_description: (resourceMetadata.data as MetascrapperResponse)?.description,
-  }) as VITResource
+  } as VITResource)
 };
-
 
 const migrateLocalData = async (authenticatedUser : AuthenticatedUser) => {
   try {
@@ -77,11 +78,13 @@ const migrateLocalData = async (authenticatedUser : AuthenticatedUser) => {
     const linksRef = collection(firestore, `links`);
 
     // Transform
-    const insertLocalLinkPromises = localSavedPosts.map((localPost) => {
-      delete localPost.id;
+    const insertLocalLinkPromises = localSavedPosts.map(Resource.fromVITResource).map((localPost) => {
+      const localPost_ : any = localPost;
+
+      delete localPost_.id;
 
       return addDoc(linksRef, {
-        ...localPost,
+        ...localPost_,
         deleted: false,
         byId: authenticatedUser.id,
         by: { ...authenticatedUser },

@@ -1,8 +1,10 @@
 import { userEvent } from "@storybook/testing-library";
 import { render } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { mockedResource } from "../../__tests__/utils";
+import { mockedVITResource } from "../../__tests__/utils";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
+import { Resource } from "../core/entities";
+import { useAuth } from "../hooks/useAuth";
 import { useLinks } from "../hooks/useLinks";
 import { unsaveLink } from "../services/datasource";
 import { SavedPage } from "./saved";
@@ -33,11 +35,17 @@ describe("Saved", () => {
   });
 
   it("should list all saved posts", async () => {
-    const oldPostOne = mockedResource();
-    const oldPostTwo = mockedResource();
+    const oldPostOne = mockedVITResource();
+    const oldPostTwo = mockedVITResource();
+
+    console.log(`>>> copy this:\n${JSON.stringify([oldPostOne, oldPostTwo])}`);
+
+    (useAuth as jest.Mock).mockReturnValue({
+      isAuthenticated: true,
+    });
 
     (useLinks as jest.Mock).mockReturnValue({
-      userLinks: [oldPostOne, oldPostTwo],
+      userLinks: [oldPostOne, oldPostTwo].map(Resource.fromVITResource),
     });
 
     localStorage.setItem(SAVED_LINK_KEY, JSON.stringify([oldPostOne, oldPostTwo]));
@@ -52,9 +60,9 @@ describe("Saved", () => {
 
   // TODO: Refactor failing test.
   it("should delete an already saved post if is clicked on save button", async () => {
-    const oldPostOne = mockedResource();
+    const oldPostOne = mockedVITResource();
 
-    let userLinks_ = [oldPostOne];
+    let userLinks_ = [oldPostOne].map(Resource.fromVITResource);
 
     (useLinks as jest.Mock)
       .mockImplementation(() => {

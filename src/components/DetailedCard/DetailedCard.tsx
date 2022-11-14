@@ -1,4 +1,4 @@
-import { Resource, VITResource } from "@/src/core/entities";
+import { Resource } from "@/src/core/entities";
 import { MutableRefObject, ReactNode, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import Bookmark from "../../../public/assets/bookmark.svg";
@@ -6,20 +6,19 @@ import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
 import { useOnClickOutside } from "@/src/hooks/useOnClickOutside";
+import { useResource } from "@/src/hooks/useResource";
 
 export type DetailedCardProps = {
-  hit: VITResource,
-  innerRef: MutableRefObject<HTMLDivElement>,
+  hit: Resource,
+  innerRef?: MutableRefObject<HTMLDivElement>,
   isSaved?: boolean,
   onSaveClicked?: () => void,
-  onShareClicked?: () => void,
   onClose?: () => void,
 };
 
 export type DetailedCardWrapperProps = {
   isSaved?: boolean,
-  onSaveClicked?: () => void,
-  onShareClicked?: () => void,
+  onSaveClicked?: (resource : Resource) => void,
 };
 
 const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
@@ -30,10 +29,9 @@ const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
 );
 
 export const useDetailedCard = () => {
-  const [hit, setHit] = useState<VITResource | null>(null);
+  const [hit, setHit] = useState<Resource | null>(null);
 
-
-  const show = (data : VITResource) => setHit(data);
+  const show = (data : Resource | undefined | null) => data && setHit(data);
   
   const close = () => setHit(null);
 
@@ -51,8 +49,7 @@ export const useDetailedCard = () => {
         innerRef={detailedCardRef}
         hit={hit}
         isSaved={props.isSaved}
-        onSaveClicked={props.onSaveClicked}
-        onShareClicked={props.onShareClicked}
+        onSaveClicked={() => props.onSaveClicked?.(hit)}
       />
     </SheetWrapper>
   };
@@ -62,7 +59,9 @@ export const useDetailedCard = () => {
 
 export const DetailedCard = (props : DetailedCardProps) => {
 
-  const resourceData = useMemo(() => Resource.fromVITResource(props.hit), [props.hit]);
+  const { share } = useResource();
+
+  const resourceData = useMemo(() => props.hit, [props.hit]);
 
   const ActionBar = () => (
     <div className="grid grid-cols-[100px_auto_80px]">
@@ -80,7 +79,13 @@ export const DetailedCard = (props : DetailedCardProps) => {
             : <Bookmark />
           }
         </ActionStyled>
-        <ActionStyled title="Share Button" onClick={props.onShareClicked}><Share /></ActionStyled>
+        <ActionStyled
+          title="Share Button"
+          onClick={(e) => {
+            e.preventDefault();
+
+            share(resourceData);
+          }}><Share /></ActionStyled>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, getRedirectResult } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, Timestamp } from "firebase/firestore";
 /* import { getAnalytics } from "firebase/analytics"; */
 
 const firebaseConfig = {
@@ -21,11 +21,11 @@ const auth = getAuth(app);
 
 const firestore = getFirestore(app);
 
-
 export {
   app,
   auth,
   firestore,
   getRedirectResult,
+  Timestamp,
   /* analytics */
 };

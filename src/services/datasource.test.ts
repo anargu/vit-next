@@ -1,6 +1,6 @@
-import { mockedResource } from "../../__tests__/utils";
+import { mockedVITResource } from "../../__tests__/utils";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { AuthenticatedUser } from "./auth";
+import { AuthenticatedUser } from "../core/entities";
 const { migrateLocalData } = jest.requireActual("./datasource");
 
 jest.mock("../firebase", () => ({
@@ -30,8 +30,8 @@ describe("Datasource", () => {
     });
 
     it("cleans local data if data migration succeeds", async () => {
-      const oldPostOne = mockedResource();
-      const oldPostTwo = mockedResource();
+      const oldPostOne = mockedVITResource();
+      const oldPostTwo = mockedVITResource();
 
       localStorage.setItem(SAVED_LINK_KEY,
         JSON.stringify([oldPostOne, oldPostTwo])

@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 
 faker.seed(1);
 
-export const mockedResource = () : VITResource => ({
+export const mockedVITResource = () : VITResource => ({
   id: faker.datatype.uuid(),
   og_image: "https://source.unsplash.com/random/50x50",
   keyphrase: faker.lorem.sentence(5),

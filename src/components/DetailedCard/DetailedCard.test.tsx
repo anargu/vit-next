@@ -1,17 +1,17 @@
 import { render } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
-import { VITResource } from "@/src/core/entities";
+import { Resource, VITResource } from "@/src/core/entities";
 import { DetailedCard, useDetailedCard } from "./DetailedCard";
 import { useEffect } from "react";
 import { userEvent } from "@storybook/testing-library";
-import { mockedResource } from "../../../__tests__/utils";
+import { mockedVITResource } from "../../../__tests__/utils";
 faker.seed(1);
 
 describe("DetailedCard", () => {
 
   it("renders the component", async () => {
-    const resourceData = { ...mockedResource() };
-    const { findByText } = render(<DetailedCard hit={resourceData} />);
+    const resourceData = { ...mockedVITResource() };
+    const { findByText } = render(<DetailedCard hit={Resource.fromVITResource(resourceData)} />);
 
     await findByText(resourceData.og_title || "");
     await findByText(resourceData.og_description || "");
@@ -34,13 +34,13 @@ describe("useDetailedCard", () => {
   });
 
   it("should render a detailedcard when there is hit data", async () => {
-    const hit = mockedResource();
+    const hit = mockedVITResource();
 
     const Scaffold = () => {
       const { show, DetailedCardWrapper } = useDetailedCard();
 
       useEffect(() => {
-        show({...hit})
+        show(Resource.fromVITResource({...hit}))
       }, []);
 
       return (<div><DetailedCardWrapper  /></div>);

@@ -25,7 +25,6 @@ describe("SubmitLinkForm Component", () => {
 
     const { findByRole, queryByText, findByPlaceholderText } = render(<SubmitLinkForm onSubmitWithData={mockOnSubmit} />);
 
-
     const inputEl = await findByPlaceholderText("Paste or type url");
 
     fireEvent.input(inputEl, {
