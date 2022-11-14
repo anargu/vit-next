@@ -82,6 +82,8 @@ export interface User {
   displayName : string;
 }
 
+export type AuthenticatedUser = User;
+
 export interface Link {
   isDeleted : boolean;
 }

@@ -3,8 +3,7 @@ import { MetascrapperResponse } from "@/pages/api/metadata";
 import { firestore } from "../firebase";
 import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, getDocs, onSnapshot, query, QuerySnapshot, where } from "firebase/firestore";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { User, VITResource } from "../core/entities";
-import { AuthenticatedUser } from "./auth";
+import { AuthenticatedUser, User, VITResource } from "../core/entities";
 
 const fetchUser = async (id : string) : Promise<User> => {
   const userRef = doc(firestore, `users/${id}`);

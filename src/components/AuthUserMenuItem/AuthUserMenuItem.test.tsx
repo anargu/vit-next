@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { useAuth } from "@/src/hooks/useAuth";
+import { AuthenticatedUser } from "@/src/core/entities";
 import { AuthUserMenuItem } from "./AuthUserMenuItem";
-import { AuthenticatedUser } from "@/src/services/auth";
 
 jest.mock("@/src/hooks/useAuth", () => {
   return ({

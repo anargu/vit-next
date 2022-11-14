@@ -1,12 +1,7 @@
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, firestore, getRedirectResult } from "../firebase"
-
-export type AuthenticatedUser = {
-  id: string,
-  email: string | null,
-  displayName: string | null,
-}
+import { AuthenticatedUser } from "@/src/core/entities"
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -26,10 +21,12 @@ const getSignInResult = async () => {
 
         if (!user) return resolve(null);
 
+        if (!user.email) throw new Error("No email provided");
+
         resolve({
           id: user.uid,
           email: user.email,
-          displayName: user.displayName,
+          displayName: user.displayName ?? user.email.split("@")?.[0],
         });
       }).catch((error) => {
         /* const errorCode = error.code; */
