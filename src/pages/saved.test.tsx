@@ -38,8 +38,6 @@ describe("Saved", () => {
     const oldPostOne = mockedVITResource();
     const oldPostTwo = mockedVITResource();
 
-    console.log(`>>> copy this:\n${JSON.stringify([oldPostOne, oldPostTwo])}`);
-
     (useAuth as jest.Mock).mockReturnValue({
       isAuthenticated: true,
     });
