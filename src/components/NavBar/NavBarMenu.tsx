@@ -1,10 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 
+interface ItemSubMenu {
+  label: string,
+  url?: string,
+  onClick?: (...args : any) => void,
+}
+
 interface NavBarItemMenuProps {
   right?: boolean,
   children: React.ReactNode,
-  menu?: { label: string, url: string }[],
+  menu?: ItemSubMenu[],
 }
 
 export const NavBarItemMenu : React.FC<NavBarItemMenuProps> = ({ right, children, menu }) => {
@@ -27,7 +33,7 @@ export const NavBarItemMenu : React.FC<NavBarItemMenuProps> = ({ right, children
   }, []);
 
   return (
-    <div className="relative text-right" ref={ref}>
+    <div className=" relative text-right" ref={ref}>
       <div onClick={() => { setIsOpen((oldValue) => !oldValue) }}>
         {children}
       </div>
@@ -46,11 +52,23 @@ export const NavBarItemMenu : React.FC<NavBarItemMenuProps> = ({ right, children
                   setIsOpen(false);
                 }}
               >
-                <Link href={item.url}>
+                {item.url
+                ? <Link href={item.url}>
                   <span className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                     {item.label}
                   </span>
                 </Link>
+                : <span
+                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      item.onClick?.();
+                    }}
+                  >
+                    {item.label}
+                  </span>}
+                
               </li>
             ))}
           </ul>

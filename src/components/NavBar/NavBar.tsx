@@ -3,6 +3,7 @@ import Image from "next/image";
 import { NavBarItemMenu } from "./NavBarMenu";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
+import { AuthUserMenuItem } from "../AuthUserMenuItem/AuthUserMenuItem";
 
 export const FEED_LABEL = "Feed";
 export const SAVED_LABEL = "Saved";
@@ -70,9 +71,11 @@ export const NavBar = () => {
         animate={router.pathname === "/about" ? "aboutIn" : "in"}
         initial="out"
         exit="out"
-        className="bg-emerald-100 grid gap-3 grid-cols-[20px_48px_48px_auto_70px] lg:grid-cols-[24px_96px_96px_auto_70px] items-center h-[72px] px-4"
+        className="bg-emerald-100 grid gap-3 grid-cols-[20px_48px_48px_auto_96px] lg:grid-cols-[24px_96px_96px_auto_96px] items-center h-[72px] px-4"
       >
+        {/* Left side */}
         <Image src="/assets/v_icon_512px.png" width="24px" height="24px" sizes="(min-width: 1024px) 24px, 20px"/>
+
         {leftItems.map((item) =>
           <NavBarItem
             key={item.label}
@@ -82,11 +85,14 @@ export const NavBar = () => {
 
         <div className="inline-block w-full"/>
 
-        <div className="inline-grid grid-cols-1 gap-6">
+        {/* Right side */}
+        <div className="inline-flex grid-cols-1 gap-4">
           {/*
             TODO: Switch layout feature
             <Image src="/assets/mosaic.svg" width="28px" height="28px" />
           */}
+          <AuthUserMenuItem />
+
           <NavBarItemMenu right menu={[
             { label: "About us", url: "/about" }
           ]}>

@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthUserMenuItem renders AuthUserMenuItem 1`] = `
+<div>
+  <div
+    class=" relative text-right"
+  >
+    <div>
+      <span
+        class="cursor-pointer inline-flex items-center gap-2"
+      >
+        <svg />
+      </span>
+    </div>
+    <div
+      class="hidden right-0
+        absolute z-30 min-w-[96px] text-base list-none bg-white rounded divide-y
+        divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+    >
+      <ul
+        aria-labelledby="dropdown"
+        class="py-1"
+      >
+        <li>
+          <span
+            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+          >
+            Sign In
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;

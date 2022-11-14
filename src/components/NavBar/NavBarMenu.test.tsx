@@ -32,5 +32,31 @@ describe("NavBarMenuItem", () => {
 
     expect(menuContainer).toHaveClass("hidden");
   });
+
+  it("calls function defined when menu item has a function to execute", async () => {
+
+    const onClickMock = jest.fn();
+
+    const { getByText } = render(
+      <div>
+        <NavBarItemMenu
+          menu={[
+            {label: "A", onClick: onClickMock }
+          ]}
+        >
+          ItemContent
+        </NavBarItemMenu>
+        <span>Other</span>
+      </div>
+    );
+
+    const navItem = getByText("ItemContent");
+    fireEvent.click(navItem);
+
+    const itemMenu = getByText("A");
+    fireEvent.click(itemMenu);
+
+    expect(onClickMock).toHaveBeenCalled();
+  });
 });
 
