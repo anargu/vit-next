@@ -33,7 +33,7 @@ export class Resource {
     this.updatedAt = date_updated ? new Date(date_updated) : new Date();
     this.deleted = deleted ?? false;
 
-    this.imageSrc = og_image;
+    this.imageSrc = og_image ?? null;
     this.imageAlt = keyphrase ?? null;
 
     this.url = url;
