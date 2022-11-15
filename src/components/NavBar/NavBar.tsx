@@ -23,7 +23,7 @@ const variants = {
     }
   },
   aboutIn: {
-    backgroundColor: "rgb(254 249 195)",
+    backgroundColor: "rgb(248 250 252)",
     transition: {
       duration: 0.75,
       delay: 1.5

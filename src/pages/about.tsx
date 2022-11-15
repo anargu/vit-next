@@ -2,10 +2,19 @@ import React from 'react';
 
 export const AboutPage = () => {
   return (
-    <div className="bg-yellow-100 text-gray-600">
+    <div className="bg-slate-50 text-gray-600">
       <div className="grid gap-2 min-h-[calc(100vh-72px)]">
         <h1 className="text-center py-2">About VIT</h1>
+
         <div className="leading-tight text-lg max-w-[80%] mx-6 mb-2">
+
+          <div className="">
+            <span className="inline-block text-lg mb-4 bg-amber-100 p-4 rounded-lg">
+              📢 Wanna give us your feedback? 
+              Join our <a className="font-bold underline" href="https://t.me/vitlinksaver" target="_blank">Telegram community.</a>
+            </span>
+          </div>
+
           VIT is formed by a small group of Peruvian developers. Our goal (for now) is to
           share useful tools in any sub-field related to Computer Science, Art, UI/UX, XR, and so on.
           We surf on the internet (as probably you do) and collect urls, resources, blogs that we consider <span className="font-bold">interesting</span>.
@@ -13,9 +22,12 @@ export const AboutPage = () => {
         </div>
 
         <div className="leading-tight text-lg max-w-[80%] mx-6 mb-2">
-          Special thanks to <a href="https://www.instagram.com/m4xlr/">Max</a>. His work on the UI design was vital and inspiring to implement the frontend part
+          Thanks to&nbsp;
+          <a className="font-bold underline" href="https://www.instagram.com/m4xlr/" target="_blank">Max</a>&nbsp;
+          and&nbsp;
+          <a className="font-bold underline" href="https://twitter.com/VktorR" target="_blank">Vktor</a>.
+          Their work on the UI and product design are vital to this project.
         </div>
-
 
         <div className="leading-tight float-right text-right max-w-[80%] mx-6">
           <h1 className="mx-0 font-bold text-xl">Website's Author</h1>
