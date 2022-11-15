@@ -1,12 +1,17 @@
 import { ga, ON_CLICK_SAVE_POST_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from "../../lib/ga";
 import { useEffect, useMemo, useState } from "react";
-import { showDefaultNotification, showNotification } from "../components/Notification/Notification";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
 import { DOMAIN_REGEX } from "../core/constants";
 import { Resource, VITResource } from "../core/entities";
 import { fetchMetadataFromURL, insertLink, unsaveLink } from "../services/datasource";
 import { useAuth } from "./useAuth";
 import { useLinks } from "./useLinks";
+
+export type SaveResourceResult = {
+  isAlreadySaved : boolean,
+};
+
+export type SaveResourceFn = (resource : string | Resource) => Promise<SaveResourceResult>;
 
 export const useSavedResources = () => {
 
@@ -37,9 +42,9 @@ export const useSavedResources = () => {
     setLocalResources(savedPosts_.map(Resource.fromVITResource));
   }, [localResources]);
 
-  const saveResource = async (resource : string | Resource) : Promise<null | any> => {
+  const saveResource : SaveResourceFn = async (resource : string | Resource) => {
     try {
-      if (!isAuthenticated) throw new Error("To save, user should be authenticated.");
+      if (!isAuthenticated) throw new Error("To save/unsave, user should be authenticated.");
 
       const isStringUrl = typeof resource === "string";
 
@@ -72,19 +77,11 @@ export const useSavedResources = () => {
         });
       }
 
-      showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
-
-      return null;
+      return { isAlreadySaved : isAlreadySaved };
     } catch (error : any) {
       console.error(error);
 
-      showNotification(
-        error?.message ?? "Something went wrong",
-        "Error",
-        { color: "red", }
-      );
-
-      return error;
+      throw error;
     }
   };
 

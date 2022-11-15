@@ -7,12 +7,13 @@ import Share from "../../../public/assets/share.svg";
 import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 import { BackgroundImage } from "./BackgroundImage";
 import { useResource } from "@/src/hooks/useResource";
+import { SaveResourceFn } from "@/src/hooks/useSavedResources";
 
 export type ResourceCardProps = {
   hit?: VITResource,
   resource?: Resource,
   isSaved?: boolean,
-  onSaveResource?: (resource : Resource) => Promise<void>,
+  onSaveResource?: SaveResourceFn,
   onShowDetailedCard?: (resource : Resource) => void,
 };
 
@@ -27,7 +28,18 @@ export const ResourceCard = ({ hit, resource, onSaveResource, onShowDetailedCard
   const onSaveClicked = async () => {
     if (!onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
     
-    await onSaveResource(resourceData);
+    try {
+      const { isAlreadySaved } = await onSaveResource(resourceData);
+
+      showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
+      
+    } catch (error : any) {
+      showNotification(
+        error?.message ?? "Something went wrong",
+        "Error",
+        { color: "red", }
+      );
+    }
   };
 
   const onShareClicked = () => shareResource(resourceData);

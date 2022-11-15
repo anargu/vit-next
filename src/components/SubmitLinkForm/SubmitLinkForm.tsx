@@ -18,21 +18,25 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<SubmitFormTypes>();
 
   const onSubmitCutomLink : SubmitHandler<SubmitFormTypes> = async (data) => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const error = await props.onSubmitWithData?.(data.inputLink);
+      await props.onSubmitWithData?.(data.inputLink);
+
+      showNotification("New Link Saved", "Success", {
+        color: "green"
+      });
+
+      reset();
+    } catch (error : any) {
+      showNotification(
+        error?.message ?? "Something went wrong",
+        "Error",
+        { color: "red", }
+      );
+    }
 
     setLoading(false);
-
-    if (error) return;
-    
-    showNotification("New Link Saved", "Success", {
-      color: "green"
-    });
-
-    reset();
-
-
   };
 
   return (

@@ -7,18 +7,20 @@ import Share from "../../../public/assets/share.svg";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
 import { useOnClickOutside } from "@/src/hooks/useOnClickOutside";
 import { useResource } from "@/src/hooks/useResource";
+import { showDefaultNotification, showNotification } from "../Notification/Notification";
+import { SaveResourceFn } from "@/src/hooks/useSavedResources";
 
 export type DetailedCardProps = {
   hit: Resource,
   innerRef?: MutableRefObject<HTMLDivElement>,
   isSaved?: boolean,
-  onSaveClicked?: () => void,
+  onSaveClicked?: SaveResourceFn,
   onClose?: () => void,
 };
 
 export type DetailedCardWrapperProps = {
   isSaved?: boolean,
-  onSaveClicked?: (resource : Resource) => void,
+  onSaveClicked?: SaveResourceFn,
 };
 
 const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
@@ -49,7 +51,7 @@ export const useDetailedCard = () => {
         innerRef={detailedCardRef}
         hit={hit}
         isSaved={props.isSaved}
-        onSaveClicked={() => props.onSaveClicked?.(hit)}
+        onSaveClicked={props.onSaveClicked}
       />
     </SheetWrapper>
   };
@@ -63,6 +65,23 @@ export const DetailedCard = (props : DetailedCardProps) => {
 
   const resourceData = useMemo(() => props.hit, [props.hit]);
 
+  const onSaveClicked = async () => {
+    if (!props.onSaveClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
+    
+    try {
+      const { isAlreadySaved } = await props.onSaveClicked?.(resourceData);
+
+      showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
+
+    } catch (error : any) {
+      showNotification(
+        error?.message ?? "Something went wrong",
+        "Error",
+        { color: "red", }
+      );
+    }
+  };
+
   const ActionBar = () => (
     <div className="grid grid-cols-[100px_auto_80px]">
       <OutlineButton onClick={() => {
@@ -73,7 +92,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
       }}>Visit Site</OutlineButton>
       <div />
       <div className="inline-flex justify-between items-center">
-        <ActionStyled title="Save Button" onClick={props.onSaveClicked}>
+        <ActionStyled title="Save Button" onClick={onSaveClicked}>
           {props.isSaved
             ? <Trash />
             : <Bookmark />

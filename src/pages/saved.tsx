@@ -25,9 +25,7 @@ export const SavedPage = () => {
         <div>
           <SubmitLinkForm
             showLabel={false}
-            onSubmitWithData={async (link : string) => {
-              return await saveResource(link);
-            }}
+            onSubmitWithData={saveResource}
           />
         </div>
       </div> 
@@ -48,8 +46,11 @@ export const SavedPage = () => {
           {savedResourcesV2.map((resource, index) => (
             <motion.div
               key={`resource-${index}`}
-              initial={{ opacity: 0, scale: 0 }}
+              initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                default: { ease: "easeOut", duration: 0.2 }
+              }}
               exit={{ opacity: 0 }}
             >
               <ResourceCard
