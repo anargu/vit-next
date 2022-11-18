@@ -41,7 +41,7 @@ export const SavedPage = () => {
     if (!savedResourcesV2) return null;
 
     return (
-      <div className="grid grid-cols-2">
+      <div className="px-1 grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <AnimatePresence>
           {savedResourcesV2.map((resource, index) => (
             <motion.div

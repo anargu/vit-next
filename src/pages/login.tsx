@@ -65,9 +65,9 @@ export const LoginPage = () => {
     : null}
 
     {isLoading
-    ? (<div className="p-4 mb-4 text-sm text-stone-800 bg-amber-300 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+    ? (<div className="p-4 mb-4 text-sm text-stone-800 bg-amber-300 rounded-lg dark:bg-amber-500 dark:text-amber-100" role="alert">
           <span className="font-regular">We are syncing your data. Please wait a moment.</span>
-          <span className="px-2"><CircularLoader size="18px" colorClassname="text-stone-800" /></span>
+          <span className="px-2"><CircularLoader size="18px" colorClassname="text-stone-100" /></span>
       </div>)
     : null}
 
