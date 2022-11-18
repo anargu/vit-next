@@ -51,12 +51,12 @@ export const ResourceCard = ({ hit, resource, onSaveResource, onShowDetailedCard
 
   return (
     <>
-      <div className="relative py-4 px-4 text-white h-full" onClick={onSelectCard}>
+      <div className=" rounded relative py-4 px-4 text-white h-full" onClick={onSelectCard}>
         {/* colored overlay */}
-        <div className="absolute top-0 right-0 bottom-0 left-0 bg-slate-900/80 z-20" />
+        <div className=" rounded absolute top-0 right-0 bottom-0 left-0 bg-slate-900/80 z-20" />
 
         {resourceData.imageSrc && (
-          <div className="absolute top-0 right-0 bottom-0 left-0 z-10">
+          <div className="rounded absolute top-0 right-0 bottom-0 left-0 z-10">
             <BackgroundImage alt={resourceData.imageAlt || "Link image"} src={resourceData.imageSrc} />
           </div>
         )}

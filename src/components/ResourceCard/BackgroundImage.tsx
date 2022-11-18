@@ -7,7 +7,7 @@ export type BackgroundImageProps = {
 export const BackgroundImage = (props : BackgroundImageProps) => (
   <div
     role="img"
-    className={`w-full h-full bg-cover bg-no-repeat`}
+    className={`rounded w-full h-full bg-cover bg-no-repeat`}
     style={{ backgroundImage: `url(${props.src})`}}
   />
 );
