@@ -56,7 +56,7 @@ export const ResourceCard = ({ hit, resource, onSaveResource, onShowDetailedCard
         <div className=" rounded absolute top-0 right-0 bottom-0 left-0 bg-slate-900/80 z-20" />
 
         {resourceData.imageSrc && (
-          <div className="rounded absolute top-0 right-0 bottom-0 left-0 z-10">
+          <div className="rounded overflow-hidden absolute top-0 right-0 bottom-0 left-0 z-10">
             <BackgroundImage alt={resourceData.imageAlt || "Link image"} src={resourceData.imageSrc} />
           </div>
         )}
