@@ -27,7 +27,7 @@ exports[`Login renders login page 1`] = `
       Sign in with Google
     </button>
     <div
-      class="p-4 mb-4 text-sm text-stone-800 bg-amber-300 rounded-lg dark:bg-red-200 dark:text-red-800"
+      class="p-4 mb-4 text-sm text-stone-800 bg-amber-300 rounded-lg dark:bg-amber-500 dark:text-amber-100"
       role="alert"
     >
       <span
@@ -40,7 +40,7 @@ exports[`Login renders login page 1`] = `
       >
         <svg
           aria-hidden="true"
-          class="animate-spin inline-block text-stone-800"
+          class="animate-spin inline-block text-stone-100"
           data-icon="loading"
           fill="currentColor"
           focusable="false"

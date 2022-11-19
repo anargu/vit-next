@@ -21,7 +21,9 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
     try {
       setLoading(true);
 
-      await props.onSubmitWithData?.(data.inputLink);
+      const shouldHTTPSPrefix = !data.inputLink.startsWith("http");
+
+      await props.onSubmitWithData?.(shouldHTTPSPrefix ? `https://${data.inputLink}` : data.inputLink);
 
       showNotification("New Link Saved", "Success", {
         color: "green"

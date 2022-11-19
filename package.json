@@ -8,7 +8,8 @@
     "test:ci": "jest --ci",
     "cypress": "cypress open",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deployFirestoreIndexes": "firebase deploy --only firestore:indexes"
   },
   "resolutions": {
     "styled-components": "^5"

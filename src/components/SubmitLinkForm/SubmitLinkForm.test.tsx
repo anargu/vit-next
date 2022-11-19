@@ -43,4 +43,29 @@ describe("SubmitLinkForm Component", () => {
 
     expect(mockOnSubmit).toBeCalled();
   });
+
+  it("if input text has not http(s) prefix, then it should be added", async () => {
+    const mockOnSubmit = jest.fn();
+
+    const { findByRole, queryByText, findByPlaceholderText } = render(<SubmitLinkForm onSubmitWithData={mockOnSubmit} />);
+
+    const inputEl = await findByPlaceholderText("Paste or type url");
+
+    fireEvent.input(inputEl, {
+      target: {
+        value: "google.com" 
+      }
+    })
+
+    await act(async () => {
+      const buttonEl = await findByRole("button", { name: /Save/i });
+      fireEvent.submit(buttonEl);
+    })
+
+    const errorEl = queryByText("Error");
+    expect(errorEl).toBeNull();
+
+    expect(mockOnSubmit).toBeCalled();
+    expect(mockOnSubmit).toBeCalledWith("https://google.com");
+  });
 });

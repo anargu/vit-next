@@ -1,7 +1,7 @@
 import { APIResponse } from "@/pages/api/entities";
 import { MetascrapperResponse } from "@/pages/api/metadata";
 import { firestore } from "../firebase";
-import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where } from "firebase/firestore";
+import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where, orderBy } from "firebase/firestore";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
 import { AuthenticatedUser, Resource, User, VITResource } from "../core/entities";
 
@@ -20,9 +20,12 @@ const listenLinksFromUser = (
 ) => {
   const linksRef = collection(firestore, `links`);
 
-  const q = query(linksRef, where("byId", "==", id), where("deleted", "==", false))
+  const q = query(linksRef, where("byId", "==", id), where("deleted", "==", false), orderBy("createdAt", "desc"))
 
-  const unSub = onSnapshot(q, onSnapshotCallback);
+  const unSub = onSnapshot(q, onSnapshotCallback,
+    (err) => {
+      console.error(err);
+    });
   
   return unSub;
 };
@@ -53,6 +56,8 @@ const fetchMetadataFromURL = async (url : string) : Promise<Resource> => {
   if (!resourceMetadata.isOk) return new Resource({
     url: url,
     url_title: url,
+    date_created: new Date().toISOString(),
+    og_description: "",
   } as VITResource)
 
   return new Resource({
