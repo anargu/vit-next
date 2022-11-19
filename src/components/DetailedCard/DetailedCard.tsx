@@ -117,7 +117,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
           <img className="inline-block h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
         )}
       </div>
-      <div className="relative mx-6 mb-8 h-[400px] overflow-hidden">
+      <div className="relative mx-6 mb-8 max-h-[400px] min-h-[300px] overflow-hidden">
         <h1 className="mb-2 mt-4 mx-0 text-2xl">{resourceData.title}</h1>
         <p>{resourceData.description}</p>
         <div className=" bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-white"></div>
