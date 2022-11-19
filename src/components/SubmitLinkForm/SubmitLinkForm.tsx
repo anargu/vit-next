@@ -54,7 +54,6 @@ export const SubmitLinkForm = (props : SubmitLinkFormProps) => {
             <input
               id="custom-url-input"
               type="text"
-              autoFocus
               disabled={loading}
               placeholder="Paste or type url"
               className="bg-slate-200 rounded outline-none py-2 px-2 w-full disabled:text-gray-500"
