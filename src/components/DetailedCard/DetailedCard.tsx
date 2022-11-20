@@ -5,7 +5,6 @@ import Bookmark from "../../../public/assets/bookmark.svg";
 import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
-import { useOnClickOutside } from "@/src/hooks/useOnClickOutside";
 import { useResource } from "@/src/hooks/useResource";
 import { showDefaultNotification, showNotification } from "../Notification/Notification";
 import { SaveResourceFn } from "@/src/hooks/useSavedResources";
@@ -40,12 +39,11 @@ export const useDetailedCard = () => {
   const DetailedCardWrapper = (props : DetailedCardWrapperProps) => {
     const detailedCardRef = useRef<any>(null);
 
-    useOnClickOutside(detailedCardRef, () => close());
-
     if (!hit) return null;
 
     return <SheetWrapper
       show={true}
+      onBackgroundClicked={close}
       onCloseSheet={close}>
       <DetailedCard
         innerRef={detailedCardRef}
