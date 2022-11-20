@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
+import { useOnClickOutside } from "@/src/hooks/useOnClickOutside";
 
 interface ItemSubMenu {
   label: string,
@@ -18,26 +19,14 @@ export const NavBarItemMenu : React.FC<NavBarItemMenuProps> = ({ right, children
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event : MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, []);
+  useOnClickOutside(ref, () => { setIsOpen(false); });
 
   return (
     <div className=" relative text-right" ref={ref}>
       <div onClick={() => { setIsOpen((oldValue) => !oldValue) }}>
         {children}
       </div>
-      <div className={`${!isOpen && "hidden"} ${right && "right-0"}
+      <div className={`${!isOpen ? "hidden" : ""} ${right && "right-0"}
         absolute z-30 min-w-[96px] text-base list-none bg-white rounded divide-y
         divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600`}
       >

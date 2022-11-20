@@ -13,11 +13,15 @@ export function useOnClickOutside(ref : MutableRefObject<any>, handler : (e : an
         handler(event);
       };
 
-      document.addEventListener("mousedown", listener);
-      document.addEventListener("touchstart", listener);
+      document.addEventListener("click", listener);
+      // Disabled temporally
+      /* document.addEventListener("mousedown", listener); */
+      /* document.addEventListener("touchstart", listener); */
       return () => {
-        document.removeEventListener("mousedown", listener);
-        document.removeEventListener("touchstart", listener);
+        document.removeEventListener("click", listener);
+        // Disabled temporally
+        /* document.removeEventListener("mousedown", listener); */
+        /* document.removeEventListener("touchstart", listener); */
       };
     },
     // Add ref and handler to effect dependencies
