@@ -3,6 +3,7 @@ import React from 'react';
 
 export type SheetWrapperProps = {
   show: boolean,
+  onBackgroundClicked?: () => void | undefined,
   onCloseSheet: () => void | undefined,
   children: React.ReactNode | undefined,
 };
@@ -15,7 +16,9 @@ export const SheetWrapper = (props : SheetWrapperProps) => {
           className="h-[100vh] w-full fixed bottom-0 left-0 right-0 h-full z-50"
         >
           <motion.div
-            className="h-full bg-black/70 z-40"
+            className="h-full bg-black/70 z-40 pointer-events-auto"
+            data-testid="background"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.onBackgroundClicked?.(); }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -28,7 +31,7 @@ export const SheetWrapper = (props : SheetWrapperProps) => {
               transition={{
                 duration: 0.4,
               }}
-              onClick={(e) => { e.preventDefault(); props.onCloseSheet?.(); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.onCloseSheet?.(); }}
               className="relative cursor-pointer m-4 float-right text-4xl text-white font-thin"
             >&times;</motion.div>
           </motion.div>

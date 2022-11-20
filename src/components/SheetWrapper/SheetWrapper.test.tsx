@@ -12,6 +12,9 @@ describe("SheetWrapper Component", () => {
       <div>
         <SheetWrapper
           show={show}
+          onBackgroundClicked={() => {
+            setShow(false);
+          }}
           onCloseSheet={() => {
             setShow(false);
           }}>
@@ -32,6 +35,26 @@ describe("SheetWrapper Component", () => {
     userEvent.click(buttonEl);
 
     await findByText("hello");
+  });
+
+  it("closes when close button it's clicked outside", async () => {
+    const { findByText, queryByText, getByTestId } = render(
+      <DemoComponent />
+    );
+
+    await act(async () => {
+      const buttonEl = await findByText("click");
+      userEvent.click(buttonEl);
+    });
+
+    await findByText("hello");
+
+    await act(async () => {
+      const backgroundEl = getByTestId("background");
+      userEvent.click(backgroundEl);
+    });
+
+    expect(queryByText("hello")).toBeNull();
   });
 
   it("closes when close button is clicked", async () => {
