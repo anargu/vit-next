@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 import Home from '@/pages/index'
 import { mockMeiliSearchComponent } from '@/src/components/MeiliSearch.mocks';
+import { useLinks } from '@/src/hooks/useLinks';
 
 jest.mock("../src/components/MeiliSearch", () => ({
   __esModule: true,
@@ -21,7 +22,16 @@ jest.mock("next/router", () => ({
   },
 }));
 
+jest.mock("@/src/hooks/useLinks", () => ({
+  useLinks: jest.fn(),
+}));
+
 it('renders homepage unchanged', () => {
+  (useLinks as jest.Mock).mockReturnValue({
+    feedLinks: [],
+    initListeningFeed: () => (() => {}),
+  });
+
   const { container } = render(<Home />);
   expect(container).toMatchSnapshot();
 })

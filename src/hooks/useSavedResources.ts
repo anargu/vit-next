@@ -2,14 +2,16 @@ import { ga, ON_CLICK_SAVE_POST_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from "../..
 import { useEffect, useMemo, useState } from "react";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
 import { DOMAIN_REGEX } from "../core/constants";
-import { Resource, VITResource } from "../core/entities";
-import { fetchMetadataFromURL, insertLink, unsaveLink } from "../services/datasource";
+import { LinkPrivacy, Resource, VITResource } from "../core/entities";
+import { fetchMetadataFromURL, insertLink, unsaveLink, updateLinkPrivacy } from "../services/datasource";
 import { useAuth } from "./useAuth";
 import { useLinks } from "./useLinks";
 
 export type SaveResourceResult = {
   isAlreadySaved : boolean,
 };
+
+export type UpdatePrivacySettingFn = (resourceId : string, privacy : LinkPrivacy) => Promise<void>;
 
 export type SaveResourceFn = (resource : string | Resource) => Promise<SaveResourceResult>;
 
@@ -85,5 +87,22 @@ export const useSavedResources = () => {
     }
   };
 
-  return { savedResourcesV2, localResources, saveResource, unsaveLink };
+  const updatePrivacySetting = async (resourceId : string, privacy : LinkPrivacy) => {
+    try {
+      await updateLinkPrivacy(resourceId, privacy);
+    } catch (error : any) {
+      console.error(error);
+
+      throw error;
+    }
+  };
+
+  return {
+    savedResourcesV2,
+    userLinks,
+    localResources,
+    saveResource,
+    unsaveLink,
+    updatePrivacySetting
+  };
 };

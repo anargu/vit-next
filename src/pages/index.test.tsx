@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react'
 import { IndexPage } from "../pages/index";
 import { mockMeiliSearchComponent } from '../components/MeiliSearch.mocks';
+import { useLinks } from '../hooks/useLinks';
+import { mockedVITResource } from '../../__tests__/utils';
+import { Resource } from '../core/entities';
 
 jest.mock("next/router", () => ({
   __esModule: true,
@@ -17,12 +20,21 @@ jest.mock("../components/MeiliSearch", () => ({
   MeiliSearchBar: () => mockMeiliSearchComponent.MeiliSearchBar,
 }));
 
+jest.mock("../hooks/useLinks", () => ({
+  useLinks: jest.fn(),
+}));
+
 const IndexTitle = `VIT, a curated feed of tons of interesting articles, news, tutorials... things.`;
 
 describe("Home", () => {
 
   describe("Body", () => {
     it("should have a title", () => {
+      (useLinks as jest.Mock).mockReturnValue({
+        feedLinks: [],
+        initListeningFeed: () => (() => {}),
+      })
+
       const { getByText } = render(<IndexPage/>);
 
       const matchedEl = getByText(IndexTitle);
@@ -30,23 +42,30 @@ describe("Home", () => {
       expect(matchedEl).toBeTruthy();
     });
 
-    it("should have a search bar", () => {
-      const { container } = render(<IndexPage/>);
-
-      const matchedEl = container.querySelector("input");
-
-      expect(matchedEl).toBeTruthy();
-    });
+    // TODO: Consider add search bar and test
+    /* it("should have a search bar", () => { */
+    /*   const { container } = render(<IndexPage/>); */
+    /**/
+    /*   const matchedEl = container.querySelector("input"); */
+    /**/
+    /*   expect(matchedEl).toBeTruthy(); */
+    /* }); */
 
     it("appears two cards of results below the search bar", () => {
-      const { container } = render(<IndexPage/>);
+      const twoPosts = [mockedVITResource(), mockedVITResource()].map(Resource.fromVITResource);
 
-      // container
+      (useLinks as jest.Mock).mockReturnValue({
+        feedLinks: twoPosts,
+        initListeningFeed: () => (() => {}),
+      })
+
+      const { getByText } = render(<IndexPage/>);
+
+      twoPosts.forEach((post) => {
+        getByText(post.title!)
+      });
     });
 
-    it("shows more results when scrolled", () => {
-
-    });
 
     // it("hides title when scrolls down", () => {
     //   const { container, getByText } = render(<IndexPage/>);

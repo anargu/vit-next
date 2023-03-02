@@ -1,5 +1,10 @@
 import { ONE_DAY_IN_MILLIS, ONE_HOUR_IN_MILLIS, ONE_MINUTE_IN_MILLIS, ONE_MONTH_IN_MILLIS } from "./constants";
 
+export enum LinkPrivacy {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+};
+
 export interface VITResource {
   id?: string;
   og_image : string | null,
@@ -11,6 +16,7 @@ export interface VITResource {
   url_title: string | null,
   url: string,
   deleted? : boolean,
+  is_public: boolean | null,
 };
 
 export class Resource {
@@ -19,6 +25,7 @@ export class Resource {
   updatedAt: Date;
   postedAt : Date;
   deleted: boolean;
+  isPublic: boolean;
 
   url: string;
   imageSrc : string | null;
@@ -26,12 +33,13 @@ export class Resource {
   title : string | null;
   description : string | null;
 
-  constructor({ id, deleted, og_image, keyphrase, date_created, date_updated, og_title, url_title, og_description, url } : VITResource) {
+  constructor({ id, deleted, is_public, og_image, keyphrase, date_created, date_updated, og_title, url_title, og_description, url } : VITResource) {
     this.id = id ?? null;
     this.postedAt = new Date(date_created);
     this.createdAt = new Date(date_created);
     this.updatedAt = date_updated ? new Date(date_updated) : new Date();
     this.deleted = deleted ?? false;
+    this.isPublic = is_public ?? false;
 
     this.imageSrc = og_image ?? null;
     this.imageAlt = keyphrase ?? null;

@@ -1,13 +1,13 @@
-import { Resource } from "@/src/core/entities";
+import { LinkPrivacy, Resource } from "@/src/core/entities";
 import { MutableRefObject, ReactNode, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
-import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
 import { useResource } from "@/src/hooks/useResource";
 import { showDefaultNotification, showNotification } from "../Notification/Notification";
-import { SaveResourceFn } from "@/src/hooks/useSavedResources";
+import { SaveResourceFn, UpdatePrivacySettingFn } from "@/src/hooks/useSavedResources";
+import { PrivacySetting } from "../ResourceCard/PrivacySetting";
 
 export type DetailedCardProps = {
   hit: Resource,
@@ -15,11 +15,14 @@ export type DetailedCardProps = {
   isSaved?: boolean,
   onSaveClicked?: SaveResourceFn,
   onClose?: () => void,
+  showPrivacySetting?: boolean,
+  onUpdatePrivacySetting?: UpdatePrivacySettingFn,
 };
 
 export type DetailedCardWrapperProps = {
   isSaved?: boolean,
   onSaveClicked?: SaveResourceFn,
+  onUpdatePrivacySetting?: UpdatePrivacySettingFn,
 };
 
 const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
@@ -28,34 +31,6 @@ const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
     onClick={props.onClick}
   >{props.children}</button>
 );
-
-export const useDetailedCard = () => {
-  const [hit, setHit] = useState<Resource | null>(null);
-
-  const show = (data : Resource | undefined | null) => data && setHit(data);
-  
-  const close = () => setHit(null);
-
-  const DetailedCardWrapper = (props : DetailedCardWrapperProps) => {
-    const detailedCardRef = useRef<any>(null);
-
-    if (!hit) return null;
-
-    return <SheetWrapper
-      show={true}
-      onBackgroundClicked={close}
-      onCloseSheet={close}>
-      <DetailedCard
-        innerRef={detailedCardRef}
-        hit={hit}
-        isSaved={props.isSaved}
-        onSaveClicked={props.onSaveClicked}
-      />
-    </SheetWrapper>
-  };
-
-  return { show, close, DetailedCardWrapper };
-};
 
 export const DetailedCard = (props : DetailedCardProps) => {
 
@@ -81,7 +56,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
   };
 
   const ActionBar = () => (
-    <div className="grid grid-cols-[100px_auto_80px]">
+    <div className="grid grid-cols-[100px_auto_210px]">
       <OutlineButton onClick={() => {
         if (!props.hit.url) return;
         if (typeof window === "undefined") return;
@@ -90,12 +65,37 @@ export const DetailedCard = (props : DetailedCardProps) => {
       }}>Visit Site</OutlineButton>
       <div />
       <div className="inline-flex justify-between items-center">
+        {/* Make it public option */}
+        {props.showPrivacySetting
+          ? <ActionStyled title="Privacy setting">
+              <PrivacySetting
+                isPublic={resourceData.isPublic}
+                onChangePrivacy={async (newValue) => {
+                  try {
+                      
+                    await props.onUpdatePrivacySetting?.(props.hit.id ?? "", newValue ? LinkPrivacy.PUBLIC : LinkPrivacy.PRIVATE);
+
+                    showDefaultNotification("Privacy updated.");
+                  } catch (error : any) {
+                    showNotification(
+                      error?.message ?? "Something went wrong",
+                      "Error",
+                      { color: "red", }
+                    );
+                  }
+                }}
+              />
+            </ActionStyled>
+          : null
+        }
+
         <ActionStyled title="Save Button" onClick={onSaveClicked}>
           {props.isSaved
             ? <Trash />
             : <Bookmark />
           }
         </ActionStyled>
+
         <ActionStyled
           title="Share Button"
           onClick={(e) => {

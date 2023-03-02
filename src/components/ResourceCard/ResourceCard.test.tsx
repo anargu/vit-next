@@ -28,6 +28,7 @@ describe("ResourceCard", () => {
     og_description: faker.lorem.sentence(12),
     url: faker.internet.url(),
     url_title: faker.lorem.sentence(4),
+    is_public: false,
   });
 
   it("renders the component", async  () => {

@@ -4,6 +4,7 @@ import { Timestamp } from "../firebase";
 export type Link = {
   id : string | null;
   deleted: boolean;
+  isPublic: boolean | undefined;
 
   createdAt: Timestamp;
   updatedAt: Timestamp;
@@ -24,6 +25,7 @@ export class DataTransformer {
       date_created : srcData.createdAt.toDate().toUTCString(),
       date_updated : srcData.updatedAt.toDate().toUTCString(),
       deleted: srcData.deleted,
+      is_public: srcData.isPublic ?? false,
 
       og_image : srcData.imageSrc,
       keyphrase : srcData.imageAlt,

@@ -1,9 +1,10 @@
 import { APIResponse } from "@/pages/api/entities";
 import { MetascrapperResponse } from "@/pages/api/metadata";
 import { firestore } from "../firebase";
-import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where, orderBy } from "firebase/firestore";
+import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where, orderBy, setDoc, DocumentSnapshot } from "firebase/firestore";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { AuthenticatedUser, Resource, User, VITResource } from "../core/entities";
+import { AuthenticatedUser, LinkPrivacy, Resource, User, VITResource } from "../core/entities";
+import { DataTransformer, Link } from "./entities";
 
 const fetchUser = async (id : string) : Promise<User> => {
   const userRef = doc(firestore, `users/${id}`);
@@ -12,6 +13,37 @@ const fetchUser = async (id : string) : Promise<User> => {
   const user = userSnap.data();
 
   return user as User;
+};
+
+const listenFeedLinks = (
+  onSnapshotCallback : (snapshot : QuerySnapshot<DocumentData>) => void
+) => {
+  const linksRef = collection(firestore, `feed`);
+
+  const q = query(linksRef, where("deleted", "==", false), orderBy("createdAt", "desc"))
+
+  const unSub = onSnapshot(q, onSnapshotCallback,
+    (err) => {
+      console.error(err);
+    });
+  
+  return unSub;
+};
+
+const listenLinkByID = (
+  id : string,
+  onSnapshotCallback : (resource : Resource) => void
+) => {
+  const linkRef = doc(firestore, `links/${id}`);
+
+  const unSub = onSnapshot(
+    linkRef,
+    (linkSnapshot) => onSnapshotCallback(DataTransformer.fromLinktoResource({ ...linkSnapshot.data() as Link, id: linkSnapshot.id, })),
+    (err) => {
+      console.error(err);
+    });
+  
+  return unSub;
 };
 
 const listenLinksFromUser = (
@@ -46,6 +78,37 @@ const insertLink = async (data : Resource, by : User) => {
       email: by.email,
     },
   });
+};
+
+const updateLinkPrivacy = async (resourceId : string, privacy : LinkPrivacy) => {
+  const feedDocRef = doc(firestore, `feed/${resourceId}`);
+  const linkRef = doc(firestore, `links/${resourceId}`);
+
+  await updateDoc(linkRef, {
+    updatedAt: new Date(),
+    isPublic: (privacy as LinkPrivacy) === LinkPrivacy.PUBLIC
+      ? true
+      : false,
+  });
+
+  if (privacy === LinkPrivacy.PRIVATE) {
+
+    await updateDoc(feedDocRef, {
+      deleted: true,
+      updatedAt: new Date(),
+    });
+
+    return;
+  }
+
+  const linkSnapshot = await getDoc(linkRef);
+
+  await setDoc(feedDocRef, {
+    ...linkSnapshot.data(),
+    id: linkSnapshot.id,
+    updatedAt: new Date(),
+    deleted: false,
+  }, { merge: true });
 };
 
 const fetchMetadataFromURL = async (url : string) : Promise<Resource> => {
@@ -119,9 +182,12 @@ const unsaveLink = async (linkId : string) => {
 
 export {
   fetchUser,
+  listenFeedLinks,
   listenLinksFromUser,
+  listenLinkByID,
   insertLink,
   unsaveLink,
   fetchMetadataFromURL,
+  updateLinkPrivacy,
   migrateLocalData,
 };

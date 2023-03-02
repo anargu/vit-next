@@ -4,39 +4,19 @@ exports[`renders homepage unchanged 1`] = `
 <div>
   <div>
     <div
-      class="grid grid-rows-[360px_min-content] min-h-[calc(100vh-72px)]"
+      class="mocked-framer-motion-AnimatePresence"
+    />
+    <div
+      class="grid grid-rows-[320px_min-content_min-content] min-h-[calc(100vh-72px)]"
     >
       <div
         class="text-stone-900 leading-tight text-4xl max-w-[80%] mx-6"
       >
         VIT, a curated feed of tons of interesting articles, news, tutorials... things.
       </div>
-      <div>
-        <form>
-          <input
-            type="search"
-          />
-          <button>
-            o
-          </button>
-          <button>
-            x
-          </button>
-        </form>
-        <div>
-          <ul>
-            <li>
-              1
-            </li>
-            <li>
-              2
-            </li>
-            <li>
-              3
-            </li>
-          </ul>
-        </div>
-      </div>
+      <div
+        class="px-1 grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      />
     </div>
   </div>
 </div>
