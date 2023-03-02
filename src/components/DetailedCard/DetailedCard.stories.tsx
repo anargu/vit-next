@@ -21,6 +21,7 @@ const Template: ComponentStory<typeof DetailedCard> = (args : DetailedCardProps)
 
 const mockVITResourceData = () : VITResource => ({
   id: faker.datatype.uuid(),
+  is_public: true,
   og_image: "https://source.unsplash.com/random/50x50",
   keyphrase: "man holding a beer",
   date_created: faker.datatype.datetime().toISOString(),
