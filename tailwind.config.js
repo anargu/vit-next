@@ -5,7 +5,17 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        "slide-bottom-up": {
+          '0%': { bottom: '-100%' },
+          '100%': { bottom: '0' },
+        }
+      },
+      animation: {
+        "slide-bottom-up": 'slide-bottom-up 400ms ease-in-out forwards',
+      }
+    },
   },
   plugins: [],
 }
