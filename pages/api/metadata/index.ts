@@ -36,7 +36,10 @@ async function scrappingWithTwitterProvider (url : string) : Promise<MetadataRes
   
   const body : MetadataResponse = await response.json();
 
-  return body;
+  return {
+    ...body,
+    url,
+  };
 }
 
 async function scrappingWithMetascraper (url : string) {
