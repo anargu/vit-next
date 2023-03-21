@@ -1,5 +1,6 @@
 
 export interface MetadataResponse {
+  url?: string,
   title?: string,
   author?: string,
   date?: string,

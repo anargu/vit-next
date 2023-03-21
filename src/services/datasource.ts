@@ -1,5 +1,5 @@
 import { APIResponse } from "@/pages/api/entities";
-import { MetascrapperResponse } from "@/pages/api/metadata";
+import { MetadataResponse } from "@/pages/api/metadata/entities";
 import { firestore } from "../firebase";
 import { addDoc, updateDoc, collection, doc, DocumentData, getDoc, onSnapshot, query, QuerySnapshot, where, orderBy, setDoc, DocumentSnapshot } from "firebase/firestore";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
@@ -125,12 +125,12 @@ const fetchMetadataFromURL = async (url : string) : Promise<Resource> => {
 
   return new Resource({
     date_created: new Date().toISOString(),
-    url: (resourceMetadata.data as MetascrapperResponse)?.url,
-    url_title: (resourceMetadata.data as MetascrapperResponse)?.title,
-    og_image: (resourceMetadata.data as MetascrapperResponse)?.image,
-    keyphrase: (resourceMetadata.data as MetascrapperResponse)?.image,
-    og_title: (resourceMetadata.data as MetascrapperResponse)?.title,
-    og_description: (resourceMetadata.data as MetascrapperResponse)?.description,
+    url: (resourceMetadata.data as MetadataResponse)?.url,
+    url_title: (resourceMetadata.data as MetadataResponse)?.title,
+    og_image: (resourceMetadata.data as MetadataResponse)?.image,
+    keyphrase: (resourceMetadata.data as MetadataResponse)?.image,
+    og_title: (resourceMetadata.data as MetadataResponse)?.title,
+    og_description: (resourceMetadata.data as MetadataResponse)?.description,
   } as VITResource)
 };
 
