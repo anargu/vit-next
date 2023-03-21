@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest --watch",
@@ -22,6 +23,7 @@
     "firebase": "^9.13.0",
     "framer-motion": "^7.2.1",
     "isomorphic-unfetch": "^3.1.0",
+    "jsdom": "^21.1.0",
     "metascraper": "^5.31.1",
     "metascraper-date": "^5.31.1",
     "metascraper-description": "^5.31.1",
@@ -30,6 +32,7 @@
     "metascraper-title": "^5.31.1",
     "metascraper-url": "^5.31.1",
     "next": "latest",
+    "puppeteer": "^19.7.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.36.1",
