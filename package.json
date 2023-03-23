@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "ngrok": "ngrok http 3000",
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
@@ -66,6 +67,7 @@
     "cypress": "^10.3.0",
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",
+    "ngrok": "^4.3.3",
     "node-mocks-http": "^1.11.0",
     "postcss": "^8.4.5",
     "react-test-renderer": "^18.1.0",

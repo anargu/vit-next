@@ -1,6 +1,6 @@
 import { render, waitFor } from "@testing-library/react";
 import { LoginPage } from "./login";
-import { getSignInResult, upsertUser } from "../services/auth";
+import { upsertUser, signIn } from "../services/auth";
 import { useRouter } from "next/router";
 import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
 import { migrateLocalData } from "../services/datasource";
@@ -8,10 +8,13 @@ import { WithNotificationsProvider } from "../components/Notification/Notificati
 
 console.error = jest.fn();
 
+const SIGN_IN_BUTTON_TEXT = "Sign in with Google";
+
 jest.mock('../services/auth', () => {
   return {
     getSignInResult: jest.fn(),
     upsertUser: jest.fn(),
+    signIn: jest.fn(),
   };
 });
 
@@ -31,7 +34,7 @@ describe("Login", () => {
   it("shows a loading visual feedback when it is loading for result while login", async () => {
     const loadingMessage = "We are syncing your data. Please wait a moment.";
 
-    (getSignInResult as jest.Mock).mockImplementation(async () => {
+    (signIn as jest.Mock).mockImplementation(async () => {
       await new Promise((r) => setTimeout(r, 2000));
 
       return Promise.resolve({
@@ -42,22 +45,23 @@ describe("Login", () => {
     });
 
     (upsertUser as jest.Mock).mockReturnValue(() => Promise.resolve(null));
-
-    const pushMock = jest.fn();
-
     (useRouter as jest.Mock).mockImplementation(() => ({
-      push: pushMock,
+      push: jest.fn(),
     }))
 
     const { getByText } = render(<LoginPage />);
 
-    expect(getByText(loadingMessage)).toBeTruthy();
+    getByText(SIGN_IN_BUTTON_TEXT).click();
+
+    await waitFor(() => {
+      expect(getByText(loadingMessage)).toBeTruthy();
+    });
   });
 
   it("returns to home page when it returns authenticated user after login ", async () => {
     localStorage.removeItem(SAVED_LINK_KEY);
 
-    (getSignInResult as jest.Mock).mockImplementation(() => {
+    (signIn as jest.Mock).mockImplementation(() => {
       return Promise.resolve({
         id: "1",
         displayName: "John Doe",
@@ -73,10 +77,12 @@ describe("Login", () => {
       push: pushMock,
     }))
 
-    render(<LoginPage />);
+    const { getByText } = render(<LoginPage />);
+
+    getByText(SIGN_IN_BUTTON_TEXT).click();
 
     await waitFor(() => {
-      expect(getSignInResult as jest.Mock).toHaveBeenCalled();
+      expect(signIn as jest.Mock).toHaveBeenCalled();
       expect(upsertUser as jest.Mock).toHaveBeenCalled();
       expect(pushMock as jest.Mock).toHaveBeenCalled();
     });
@@ -86,11 +92,13 @@ describe("Login", () => {
   it("shows error message alert when login failed", async () => {
     const errorMessage = "Failed authentication";
 
-    (getSignInResult as jest.Mock).mockImplementation(() => {
+    (signIn as jest.Mock).mockImplementation(() => {
       return Promise.reject(new Error(errorMessage));
     });
 
     const { getByText } = render(<LoginPage />);
+
+    getByText(SIGN_IN_BUTTON_TEXT).click();
 
     await waitFor(() => {
       getByText(errorMessage);
@@ -100,9 +108,11 @@ describe("Login", () => {
   it("shows general error message alert when login failed and not error message is provided", async () => {
     const errorMessage = "Please try again";
 
-    (getSignInResult as jest.Mock).mockReturnValue(Promise.reject({}));
+    (signIn as jest.Mock).mockReturnValue(Promise.reject({}));
 
     const { getByText } = render(<LoginPage />);
+
+    getByText(SIGN_IN_BUTTON_TEXT).click();
 
     await waitFor(() => {
       getByText(errorMessage);
@@ -111,7 +121,7 @@ describe("Login", () => {
 
   describe("User Data Migration", () => {
     it("throws a message if upload of transformed data fails", async () => {
-      (getSignInResult as jest.Mock).mockImplementation(() => {
+      (signIn as jest.Mock).mockImplementation(() => {
         return Promise.resolve({
           id: "1",
           displayName: "John Doe",
@@ -119,12 +129,14 @@ describe("Login", () => {
         });
       });
 
-      (migrateLocalData as jest.Mock).mockImplementation(() => Promise.reject(new Error("it failed")));
+      (migrateLocalData as jest.Mock).mockReturnValue(Promise.reject(Error("it failed")));
 
       const { getByText } = render(<LoginPage />);
 
+      getByText(SIGN_IN_BUTTON_TEXT).click();
+
       await waitFor(() => {
-        getByText(("it failed"));
+        getByText("it failed");
       });
     });
 
@@ -138,6 +150,8 @@ describe("Login", () => {
           <LoginPage />
         </WithNotificationsProvider>
       );
+
+      getByText(SIGN_IN_BUTTON_TEXT).click();
 
       await waitFor(() => {
         getByText((message));

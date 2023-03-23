@@ -57,8 +57,8 @@ jest.mock('./src/services/datasource.ts', () => {
 jest.mock('./src/services/auth.ts', () => {
   return {
     signIn: jest.fn(),
-    getSignInResult: jest.fn(),
     upserUser: jest.fn(),
+    getSignInResult: jest.fn(),
   };
 });
 

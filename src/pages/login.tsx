@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CircularLoader } from "../components/Loaders";
 import { showDefaultNotification } from "../components/Notification/Notification";
-import { getSignInResult, signIn, upsertUser } from "../services/auth";
+import { signIn, upsertUser } from "../services/auth";
 import { migrateLocalData } from "../services/datasource";
 
 export const LoginPage = () => {
@@ -11,45 +11,43 @@ export const LoginPage = () => {
   const [hasError, setHasError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchSignInResult = async () => {
-      try {
-        setIsLoading(true);
-        const authenticatedUser = await getSignInResult();
+  const onSignInClick = async () => {
+    try {
+      setIsLoading(true);
 
-        if (!authenticatedUser) return setIsLoading(false);
+      const authenticatedUser = await signIn();
 
-        // Creates user
-        await upsertUser(authenticatedUser);
+      if (!authenticatedUser) return setIsLoading(false);
 
-        // Migrate user data if any
-        if (await migrateLocalData(authenticatedUser)) {
-          showDefaultNotification(
-            "Migration of local data succeeded!",
-            "Info",
-          );
-        }
+      // Creates user
+      await upsertUser(authenticatedUser);
 
-        setIsLoading(false);
-
-        return await router.push("/");
-      } catch (error) {
-        console.error(`>>> error ${error}`);
-        setHasError(error);
+      // Migrate user data if any
+      if (await migrateLocalData(authenticatedUser)) {
+        showDefaultNotification(
+          "Migration of local data succeeded!",
+          "Info",
+        );
       }
 
       setIsLoading(false);
-    };
 
-    fetchSignInResult();
-  }, []);
+      return await router.push("/");
+      
+    } catch (error) {
+      console.error(`>>> error ${error}`);
+      setHasError(error);
+    }
+
+    setIsLoading(false);
+  };
 
   return <div className="h-screen flex flex-col justify-center items-center">
     <button
       onClick={(e) => {
         e.preventDefault();
 
-        signIn();
+        onSignInClick();
       }}
       type="button"
       className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
@@ -60,7 +58,7 @@ export const LoginPage = () => {
 
     {hasError
     ? (<div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
-          <span className="font-medium">Oops! there is an Error:</span> {hasError?.message ?? "Please try again"}
+        <span className="font-medium">Oops! there is an Error:</span> {hasError?.message ?? "Please try again"}
       </div>)
     : null}
 

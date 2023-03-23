@@ -1,4 +1,4 @@
-import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, firestore, getRedirectResult } from "../firebase"
 import { AuthenticatedUser } from "@/src/core/entities"
@@ -6,7 +6,19 @@ import { AuthenticatedUser } from "@/src/core/entities"
 const googleProvider = new GoogleAuthProvider();
 
 const signIn = async () => {
-  await signInWithRedirect(auth, googleProvider)
+  const userCredentials = await signInWithPopup(auth, googleProvider);
+
+  const user = userCredentials.user;
+
+  if (!user) return null;
+
+  if (!user.email) throw new Error("No email provided");
+
+  return {
+    id: user.uid,
+    email: user.email,
+    displayName: user.displayName ?? user.email.split("@")?.[0],
+  };
 };
 
 const logOut = async () => {
