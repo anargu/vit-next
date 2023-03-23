@@ -51,14 +51,14 @@ export const SavedPage = () => {
 
   // savedResources is null, it is loading
   if (userLinks === null) return (
-    <SavedPageWrapper>
+    <SavedPageWrapper saveResource={saveResource}>
       loading...
     </SavedPageWrapper>
   );
 
   // No Saved Posts
   if (userLinks.length === 0) return (
-    <SavedPageWrapper>
+    <SavedPageWrapper saveResource={saveResource}>
       <div className="mx-4 px-4 py-2 bg-amber-300">
         No Saved Posts. Save new ones by adding your links.
       </div>
