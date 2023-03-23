@@ -1,3 +1,4 @@
+import useKeyUpListener from '@/src/hooks/useEscapeKeyListener';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
@@ -9,6 +10,11 @@ export type SheetWrapperProps = {
 };
 
 export const SheetWrapper = (props : SheetWrapperProps) => {
+
+  useKeyUpListener("Escape", () => {
+    props.onCloseSheet?.();
+  });
+
   return (
     <AnimatePresence>
       {props.show && (

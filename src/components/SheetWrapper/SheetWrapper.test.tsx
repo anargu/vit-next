@@ -37,6 +37,29 @@ describe("SheetWrapper Component", () => {
     await findByText("hello");
   });
 
+  it("closes when key ESC is pressed", async () => {
+    const { findByText, container, queryByText, getByTestId } = render(
+      <DemoComponent />
+    );
+
+    await act(async () => {
+      const buttonEl = await findByText("click");
+      userEvent.click(buttonEl);
+    });
+
+    // Check if content inside Sheet is open and visible
+    await findByText("hello");
+
+    // Should close sheet
+    await act(async () => {
+      userEvent.type(container, "Escape");
+      userEvent.keyboard("{Escape}");
+    });
+
+    // Check content inside wrapper now should not be visible
+    expect(queryByText("hello")).toBeNull();
+  });
+
   it("closes when close button it's clicked outside", async () => {
     const { findByText, queryByText, getByTestId } = render(
       <DemoComponent />
