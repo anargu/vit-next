@@ -2,7 +2,7 @@ import { userEvent } from "@storybook/testing-library";
 import { render } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { mockedVITResource } from "../../__tests__/utils";
-import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
+import { SAVED_LINK_KEY } from "../core/constants";
 import { Resource } from "../core/entities";
 import { useAuth } from "../hooks/useAuth";
 import { useLinks } from "../hooks/useLinks";

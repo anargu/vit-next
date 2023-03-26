@@ -9,3 +9,4 @@ export const SEO = {
   titleVITPhrase: "VIT: Very Interesting Things",
 };
 
+export const SAVED_LINK_KEY = "saved_posts";

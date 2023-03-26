@@ -17,8 +17,6 @@ export type ResourceCardProps = {
   onShowDetailedCard?: (resource : Resource) => void,
 };
 
-export const SAVED_LINK_KEY = "saved_posts";
-
 export const ResourceCard = ({ hit, resource, onSaveResource, onShowDetailedCard, isSaved } : ResourceCardProps) => {
 
   const { share : shareResource } = useResource();
