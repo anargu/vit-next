@@ -1,19 +1,20 @@
-import { Resource, VITResource } from "../../core/entities";
 import { useMemo } from "react";
 import styled from 'styled-components';
-import Bookmark from "../../../public/assets/bookmark.svg";
-import Trash from "../../../public/assets/trash.svg";
-import Share from "../../../public/assets/share.svg";
-import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
+
 import { BackgroundImage } from "./BackgroundImage";
+import Share from "../../../public/assets/share.svg";
+import Trash from "../../../public/assets/trash.svg";
 import { useResource } from "@/src/hooks/useResource";
-import { DeleteResourceFn, SaveResourceFn } from "@/src/hooks/useLinks";
+import Bookmark from "../../../public/assets/bookmark.svg";
+import { Resource, VITResource } from "../../core/entities";
+import { CloneResourceFn, DeleteResourceFn, SaveResourceFn } from "@/src/hooks/useLinks";
+import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 
 export type ResourceCardProps = {
   hit?: VITResource,
   resource?: Resource,
   isSaved?: boolean,
-  onSaveResource?: SaveResourceFn,
+  onSaveResource?: SaveResourceFn | CloneResourceFn,
   onDeleteResource?: DeleteResourceFn,
   onShowDetailedCard?: (resource : Resource) => void,
 };
@@ -22,15 +23,20 @@ export const ResourceCard = ({ hit, resource, onDeleteResource, onSaveResource, 
 
   const { share : shareResource } = useResource();
 
+  // TODO: Check if hit is still used in application. Otherwise remove it if it
+  // is deprecated
   const resourceData = useMemo(() => resource ?? Resource.fromVITResource(hit!), [hit, resource]);
 
   const onSaveClicked = async () => {
     if (!onSaveResource && !onDeleteResource) return showNotification("Error", "Function not available yet.", { color: "red" });
+
     if (!isSaved && !onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
     if (isSaved && !onDeleteResource) return showNotification("Error", "Function not available yet.", { color: "red" });
     
     try {
-      isSaved ? onDeleteResource?.(resourceData.id!) : onSaveResource?.(resourceData);
+      const promiseUpdateResource = isSaved ? onDeleteResource?.(resourceData.id!) : onSaveResource?.(resourceData);
+
+      await promiseUpdateResource;
 
       showDefaultNotification(isSaved ? "Link unsaved." : "Link saved locally.");
       

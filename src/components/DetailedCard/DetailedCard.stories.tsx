@@ -34,6 +34,6 @@ const mockVITResourceData = () : VITResource => ({
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
-  hit: Resource.fromVITResource(mockVITResourceData()),
+  resource: Resource.fromVITResource(mockVITResourceData()),
 };
 

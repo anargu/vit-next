@@ -1,5 +1,5 @@
 import { SAVED_LINK_KEY } from "@/src/core/constants";
-import { VITResource } from "@/src/core/entities";
+import { Resource, VITResource } from "@/src/core/entities";
 import { faker } from "@faker-js/faker";
 import { MantineProvider } from "@mantine/core";
 import { userEvent } from "@storybook/testing-library";
@@ -138,6 +138,56 @@ describe("ResourceCard", () => {
   describe("Actions", () => {
 
     describe("Save", () => {
+      it("shows Error message notification when save fn fails", async () => {
+        const errorMessage = "some Error";
+        const saveResourceMock = jest.fn().mockImplementation(() => {
+          return Promise.reject(Error(errorMessage));
+        });
+
+        const { findByTitle, findByText } = render(
+          <MantineProvider>
+            <WithNotificationsProvider>
+              <ResourceCard
+                onSaveResource={saveResourceMock}
+                resource={Resource.fromVITResource(mockedVITResource())}
+              />
+            </WithNotificationsProvider>
+          </MantineProvider>
+        );
+
+        await act(async () => {
+          const saveButtonEl = await findByTitle("Save Button");
+          saveButtonEl.click();
+        });
+
+        // Check if Notification is shown.
+        await findByText(errorMessage);
+        expect(saveResourceMock).toHaveBeenCalled();
+      });
+
+      it("shows Function not available Error when save fn is not set", async () => {
+        const errorMessage = "Function not available yet.";
+
+        const { findByTitle, findByText } = render(
+          <MantineProvider>
+            <WithNotificationsProvider>
+              <ResourceCard
+                isSaved={false}
+                resource={Resource.fromVITResource(mockedVITResource())}
+              />
+            </WithNotificationsProvider>
+          </MantineProvider>
+        );
+
+        await act(async () => {
+          const saveButtonEl = await findByTitle("Save Button");
+          saveButtonEl.click();
+        });
+
+        // Check if Notification is shown.
+        await findByText(errorMessage);
+      });
+
       it("post is saved on empty local storage when save button is clicked ", async () => {
         const saveResourceMock = jest.fn().mockImplementation(() => {
           return Promise.resolve(null);

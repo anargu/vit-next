@@ -1,21 +1,15 @@
 import { useRef } from "react";
 
-import { DetailedCard } from "./DetailedCard";
+import { DetailedCard, DetailedCardProps } from "./DetailedCard";
 import { Resource } from "@/src/core/entities";
 import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
-import { DeleteResourceFn, SaveResourceFn } from "@/src/hooks/useLinks";
 
-export type DetailedCardSheetProps = {
-  /* resourceId: string | null; */
-  isSaved?: boolean,
+export type DetailedCardSheetProps = Omit<DetailedCardProps, "resource">  & {
   onClose?: () => void,
   resource: Resource | null;
-  showPrivacySetting?: boolean,
-  onSaveClicked?: SaveResourceFn | DeleteResourceFn,
 };
 
-export const DetailedCardSheet = ({ resource : hit, ...props } : DetailedCardSheetProps) => {
-  const detailedCardRef = useRef<any>(null);
+export const DetailedCardSheet = ({ resource, ...props } : DetailedCardSheetProps) => {
   const unsubscribeLinkListener = useRef<any>(null);
 
   const close = () => {
@@ -25,16 +19,15 @@ export const DetailedCardSheet = ({ resource : hit, ...props } : DetailedCardShe
   };
 
   return <SheetWrapper
-    show={!!hit}
+    show={!!resource}
     onBackgroundClicked={close}
     onCloseSheet={close}>
-    {hit
+    {resource
       ? (<DetailedCard
-        showPrivacySetting={props.showPrivacySetting}
-        innerRef={detailedCardRef}
-        hit={hit}
+        resource={resource}
         isSaved={props.isSaved}
         onSaveClicked={props.onSaveClicked}
+        showPrivacySetting={props.showPrivacySetting}
       />)
       : (<div className="bg-white py-10 text-center">
         <span className="text-black text-2xl">&bull; &bull; &bull;</span>

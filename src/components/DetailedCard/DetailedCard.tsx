@@ -6,16 +6,14 @@ import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { useResource } from "@/src/hooks/useResource";
 import { showDefaultNotification, showNotification } from "../Notification/Notification";
-import { DeleteResourceFn, SaveResourceFn, useLinks } from "@/src/hooks/useLinks";
+import { CloneResourceFn, DeleteResourceFn, SaveResourceFn, useLinks } from "@/src/hooks/useLinks";
 import { PrivacySetting } from "../ResourceCard/PrivacySetting";
 import { Loader } from "@mantine/core";
 
 export type DetailedCardProps = {
-  hit: Resource,
-  innerRef?: MutableRefObject<HTMLDivElement>,
+  resource: Resource,
   isSaved?: boolean,
-  onSaveClicked?: SaveResourceFn | DeleteResourceFn,
-  onClose?: () => void,
+  onSaveClicked?: SaveResourceFn | DeleteResourceFn | CloneResourceFn,
   showPrivacySetting?: boolean,
 };
 
@@ -31,7 +29,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
   const { updateLinkPrivacy } = useLinks();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [resource, setResource] = useState(props.hit);
+  const [resource, setResource] = useState(props.resource);
 
   const onSaveClicked = async () => {
     if (!props.onSaveClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
@@ -57,7 +55,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
       setIsLoading(true);
       setResource({...resource, isPublic: newValue } as Resource);
 
-      await updateLinkPrivacy(props.hit.id ?? "", newValue ? LinkPrivacy.PUBLIC : LinkPrivacy.PRIVATE);
+      await updateLinkPrivacy(props.resource.id ?? "", newValue ? LinkPrivacy.PUBLIC : LinkPrivacy.PRIVATE);
 
       showDefaultNotification("Privacy updated.");
     } catch (error: any) {
@@ -74,10 +72,10 @@ export const DetailedCard = (props : DetailedCardProps) => {
   const ActionBar = () => (
     <div className="grid grid-cols-[100px_40px_auto_210px]">
       <OutlineButton onClick={() => {
-        if (!props.hit.url) return;
+        if (!props.resource.url) return;
         if (typeof window === "undefined") return;
 
-        window.open(props.hit.url, "_blank");
+        window.open(props.resource.url, "_blank");
       }}>Visit Site</OutlineButton>
       <div className="flex justify-center items-center px-2">
         {isLoading ? (<Loader color="dark" size="sm" />) : null}
@@ -115,7 +113,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
   );
 
   return (
-    <div ref={props.innerRef}>
+    <div>
       <div className="mx-6 py-4"><ActionBar /></div>
       <div className="bg-stone-200 text-center h-[160px]">
         {resource.imageSrc && (

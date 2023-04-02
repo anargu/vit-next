@@ -1,6 +1,5 @@
 import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
-import { userEvent } from "@storybook/testing-library";
 
 import { DetailedCard } from "./DetailedCard";
 import { DetailedCardSheet } from "./DetailedCardSheet";
@@ -13,7 +12,7 @@ describe("DetailedCard", () => {
 
   it("renders the component", async () => {
     const resourceData = { ...mockedVITResource() };
-    const { findByText } = render(<DetailedCard hit={Resource.fromVITResource(resourceData)} />);
+    const { findByText } = render(<DetailedCard resource={Resource.fromVITResource(resourceData)} />);
 
     await findByText(resourceData.og_title || "");
     await findByText(resourceData.og_description || "");
@@ -25,7 +24,7 @@ describe("DetailedCard", () => {
 
     const SHOW_PRIVACY_TEXT = "Make it public";
 
-    const { findByText } = render(<DetailedCard hit={Resource.fromVITResource(hit)} showPrivacySetting />);
+    const { findByText } = render(<DetailedCard resource={Resource.fromVITResource(hit)} showPrivacySetting />);
 
     await findByText(SHOW_PRIVACY_TEXT);
   });
