@@ -1,41 +1,25 @@
-import { Resource } from "@/src/core/entities";
-import { SaveResourceFn, UpdatePrivacySettingFn } from "@/src/hooks/useSavedResources";
-import { listenLinkByID } from "@/src/services/datasource";
-import { useEffect, useRef, useState } from "react";
-import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
+import { useRef } from "react";
+
 import { DetailedCard } from "./DetailedCard";
+import { Resource } from "@/src/core/entities";
+import { SheetWrapper } from "../SheetWrapper/SheetWrapper";
+import { DeleteResourceFn, SaveResourceFn } from "@/src/hooks/useLinks";
 
 export type DetailedCardSheetProps = {
-  resourceId: string | null;
+  /* resourceId: string | null; */
   isSaved?: boolean,
-  onSaveClicked?: SaveResourceFn,
   onClose?: () => void,
+  resource: Resource | null;
   showPrivacySetting?: boolean,
-  onUpdatePrivacySetting?: UpdatePrivacySettingFn,
+  onSaveClicked?: SaveResourceFn | DeleteResourceFn,
 };
 
-export const DetailedCardSheet = (props : DetailedCardSheetProps) => {
+export const DetailedCardSheet = ({ resource : hit, ...props } : DetailedCardSheetProps) => {
   const detailedCardRef = useRef<any>(null);
   const unsubscribeLinkListener = useRef<any>(null);
 
-  const [hit, setHit] = useState<Resource | null>(null);
-
-  useEffect(() => {
-    if (!props.resourceId) return;
-
-    const unSub = listenLinkByID(props.resourceId, (resource) => setHit(resource));
-
-    unsubscribeLinkListener.current = unSub;
-
-    return () => {
-      unSub?.();
-    }
-  }, [props.resourceId]);
-  
   const close = () => {
     unsubscribeLinkListener.current?.();
-
-    setHit(null);
 
     props.onClose?.();
   };
@@ -51,7 +35,6 @@ export const DetailedCardSheet = (props : DetailedCardSheetProps) => {
         hit={hit}
         isSaved={props.isSaved}
         onSaveClicked={props.onSaveClicked}
-        onUpdatePrivacySetting={props.onUpdatePrivacySetting}
       />)
       : (<div className="bg-white py-10 text-center">
         <span className="text-black text-2xl">&bull; &bull; &bull;</span>

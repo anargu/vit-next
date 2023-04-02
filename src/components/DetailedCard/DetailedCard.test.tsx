@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
 import { userEvent } from "@storybook/testing-library";
@@ -7,13 +6,8 @@ import { DetailedCard } from "./DetailedCard";
 import { DetailedCardSheet } from "./DetailedCardSheet";
 import { Resource, VITResource } from "@/src/core/entities";
 import { mockedVITResource } from "../../../__tests__/utils";
-import { listenLinkByID } from "@/src/services/datasource";
 
 faker.seed(1);
-
-jest.mock("@/src/services/datasource", () => ({
-  listenLinkByID: jest.fn(),
-}));
 
 describe("DetailedCard", () => {
 
@@ -40,7 +34,7 @@ describe("DetailedCard", () => {
 describe("useDetailedCard", () => {
   it("should render null on detailedcard when hit state is null", async () => {
     const Scaffold = () => {
-      return (<div><DetailedCardSheet resourceId={null} /></div>);
+      return (<div><DetailedCardSheet resource={null} /></div>);
     };
 
     const { queryByText } = render(<Scaffold />);

@@ -1,28 +1,22 @@
 import { LinkPrivacy, Resource } from "@/src/core/entities";
-import { MutableRefObject, ReactNode, useMemo, useRef, useState } from "react";
+import { MutableRefObject, ReactNode, useState } from "react";
 import styled from "styled-components";
 import Bookmark from "../../../public/assets/bookmark.svg";
 import Trash from "../../../public/assets/trash.svg";
 import Share from "../../../public/assets/share.svg";
 import { useResource } from "@/src/hooks/useResource";
 import { showDefaultNotification, showNotification } from "../Notification/Notification";
-import { SaveResourceFn, UpdatePrivacySettingFn } from "@/src/hooks/useSavedResources";
+import { DeleteResourceFn, SaveResourceFn, useLinks } from "@/src/hooks/useLinks";
 import { PrivacySetting } from "../ResourceCard/PrivacySetting";
+import { Loader } from "@mantine/core";
 
 export type DetailedCardProps = {
   hit: Resource,
   innerRef?: MutableRefObject<HTMLDivElement>,
   isSaved?: boolean,
-  onSaveClicked?: SaveResourceFn,
+  onSaveClicked?: SaveResourceFn | DeleteResourceFn,
   onClose?: () => void,
   showPrivacySetting?: boolean,
-  onUpdatePrivacySetting?: UpdatePrivacySettingFn,
-};
-
-export type DetailedCardWrapperProps = {
-  isSaved?: boolean,
-  onSaveClicked?: SaveResourceFn,
-  onUpdatePrivacySetting?: UpdatePrivacySettingFn,
 };
 
 const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
@@ -33,18 +27,20 @@ const OutlineButton = (props : { children: ReactNode, onClick?: any }) => (
 );
 
 export const DetailedCard = (props : DetailedCardProps) => {
-
   const { share } = useResource();
+  const { updateLinkPrivacy } = useLinks();
 
-  const resourceData = useMemo(() => props.hit, [props.hit]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [resource, setResource] = useState(props.hit);
 
   const onSaveClicked = async () => {
     if (!props.onSaveClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
-    
-    try {
-      const { isAlreadySaved } = await props.onSaveClicked?.(resourceData);
 
-      showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
+    setIsLoading(true);
+    try {
+      await props.onSaveClicked?.(resource.id!);
+
+      showDefaultNotification(props.isSaved ? "Link unsaved." : "Link saved locally.");
 
     } catch (error : any) {
       showNotification(
@@ -53,37 +49,48 @@ export const DetailedCard = (props : DetailedCardProps) => {
         { color: "red", }
       );
     }
+    setIsLoading(false);
+  };
+
+  const onUpdatePrivacy = async (newValue : boolean) => {
+    try {
+      setIsLoading(true);
+      setResource({...resource, isPublic: newValue } as Resource);
+
+      await updateLinkPrivacy(props.hit.id ?? "", newValue ? LinkPrivacy.PUBLIC : LinkPrivacy.PRIVATE);
+
+      showDefaultNotification("Privacy updated.");
+    } catch (error: any) {
+      showNotification(
+        error?.message ?? "Something went wrong",
+        "Error",
+        { color: "red", }
+      );
+    }
+
+    setIsLoading(false);
   };
 
   const ActionBar = () => (
-    <div className="grid grid-cols-[100px_auto_210px]">
+    <div className="grid grid-cols-[100px_40px_auto_210px]">
       <OutlineButton onClick={() => {
         if (!props.hit.url) return;
         if (typeof window === "undefined") return;
 
         window.open(props.hit.url, "_blank");
       }}>Visit Site</OutlineButton>
+      <div className="flex justify-center items-center px-2">
+        {isLoading ? (<Loader color="dark" size="sm" />) : null}
+      </div>
       <div />
       <div className="inline-flex justify-between items-center">
         {/* Make it public option */}
         {props.showPrivacySetting
           ? <ActionStyled title="Privacy setting">
               <PrivacySetting
-                isPublic={resourceData.isPublic}
-                onChangePrivacy={async (newValue) => {
-                  try {
-                      
-                    await props.onUpdatePrivacySetting?.(props.hit.id ?? "", newValue ? LinkPrivacy.PUBLIC : LinkPrivacy.PRIVATE);
-
-                    showDefaultNotification("Privacy updated.");
-                  } catch (error : any) {
-                    showNotification(
-                      error?.message ?? "Something went wrong",
-                      "Error",
-                      { color: "red", }
-                    );
-                  }
-                }}
+                isDisabled={isLoading}
+                isPublic={resource.isPublic}
+                onChangePrivacy={onUpdatePrivacy}
               />
             </ActionStyled>
           : null
@@ -101,7 +108,7 @@ export const DetailedCard = (props : DetailedCardProps) => {
           onClick={(e) => {
             e.preventDefault();
 
-            share(resourceData);
+            share(resource);
           }}><Share /></ActionStyled>
       </div>
     </div>
@@ -111,13 +118,13 @@ export const DetailedCard = (props : DetailedCardProps) => {
     <div ref={props.innerRef}>
       <div className="mx-6 py-4"><ActionBar /></div>
       <div className="bg-stone-200 text-center h-[160px]">
-        {resourceData.imageSrc && (
-          <img className="inline-block h-full max-h-[220px]" alt={resourceData.imageAlt || ""} src={resourceData.imageSrc} />
+        {resource.imageSrc && (
+          <img className="inline-block h-full max-h-[220px]" alt={resource.imageAlt || ""} src={resource.imageSrc} />
         )}
       </div>
       <div className="relative mx-6 mb-8 max-h-[400px] min-h-[300px] overflow-hidden">
-        <h1 className="mb-2 mt-4 mx-0 text-2xl">{resourceData.title}</h1>
-        <p>{resourceData.description}</p>
+        <h1 className="mb-2 mt-4 mx-0 text-2xl">{resource.title}</h1>
+        <p>{resource.description}</p>
         <div className=" bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-white"></div>
       </div>
     </div>
