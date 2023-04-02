@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
-import { useSavedResources } from '../hooks/useSavedResources';
 import { SubmitLinkForm } from '../components/SubmitLinkForm/SubmitLinkForm';
 import { DetailedCardSheet } from '../components/DetailedCard/DetailedCardSheet';
+import { useLinks } from '../hooks/useLinks';
+import { Resource } from '../core/entities';
 
-const SavedPageWrapper = ({ children, saveResource } : any) => (
+const SavedPageWrapper = ({ children, onSubmitCallback } : any) => (
   <>
     <div className="py-4 text-sm leading-8">
       <div className="text-center text-gray-400">
@@ -14,7 +15,7 @@ const SavedPageWrapper = ({ children, saveResource } : any) => (
       <div>
         <SubmitLinkForm
           showLabel={false}
-          onSubmitWithData={saveResource}
+          onSubmitWithData={onSubmitCallback}
         />
       </div>
     </div> 
@@ -27,9 +28,9 @@ const SavedPageWrapper = ({ children, saveResource } : any) => (
 );
 
 export const SavedPage = () => {
+  const { userLinks, insertLink, deleteLink } = useLinks({listenSavedLinks: true});
 
-  const [selectedResourceID, setSelectedResourceID] = useState<string | null>(null);
-  const { userLinks, saveResource, updatePrivacySetting } = useSavedResources();
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   const SavedPostsList = useMemo(() => {
     if (!userLinks) return null;
@@ -41,8 +42,8 @@ export const SavedPage = () => {
             key={`resource-${resource?.id ?? index}`}
             resource={resource}
             isSaved={true}
-            onSaveResource={saveResource}
-            onShowDetailedCard={(resource) => setSelectedResourceID(resource.id)}
+            onDeleteResource={deleteLink}
+            onShowDetailedCard={(resource) => setSelectedResource(resource)}
           />
         ))}
       </div>
@@ -51,14 +52,14 @@ export const SavedPage = () => {
 
   // savedResources is null, it is loading
   if (userLinks === null) return (
-    <SavedPageWrapper saveResource={saveResource}>
+    <SavedPageWrapper onSubmitCallback={insertLink}>
       loading...
     </SavedPageWrapper>
   );
 
   // No Saved Posts
   if (userLinks.length === 0) return (
-    <SavedPageWrapper saveResource={saveResource}>
+    <SavedPageWrapper onSubmitCallback={insertLink}>
       <div className="mx-4 px-4 py-2 bg-amber-300">
         No Saved Posts. Save new ones by adding your links.
       </div>
@@ -70,13 +71,12 @@ export const SavedPage = () => {
       <DetailedCardSheet
         isSaved={true}
         showPrivacySetting
-        onSaveClicked={saveResource}
-        resourceId={selectedResourceID}
-        onClose={() => setSelectedResourceID(null)}
-        onUpdatePrivacySetting={updatePrivacySetting}
+        onSaveClicked={deleteLink}
+        resource={selectedResource}
+        onClose={() => setSelectedResource(null)}
       />
       
-      <SavedPageWrapper saveResource={saveResource}>
+      <SavedPageWrapper onSubmitCallback={insertLink}>
         {SavedPostsList}
       </SavedPageWrapper>
     </>

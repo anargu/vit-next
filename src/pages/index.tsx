@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { DetailedCardSheet } from '../components/DetailedCard/DetailedCardSheet';
+import React, { useState } from 'react';
+import { Resource } from '../core/entities';
+import { useLinks } from '../hooks/useLinks';
 /* import { MeiliSearchBar } from '../components/MeiliSearch'; */
 import { ResourceCard } from '../components/ResourceCard/ResourceCard';
-import { useAuth } from '../hooks/useAuth';
-import { useLinks } from '../hooks/useLinks';
+import { DetailedCardSheet } from '../components/DetailedCard/DetailedCardSheet';
 
 export const IndexPage = () => {
-  const { authUser } = useAuth();
-  const { feedLinks, initListeningFeed } = useLinks(authUser);
-  const [selectedResourceID, setSelectedResourceID] = useState<string | null>(null);
+  const { feedLinks } = useLinks({ listenFeedLinks: true });
 
-  useEffect(() => {
-    const unSub = initListeningFeed();
-
-    return () => {
-      unSub?.();
-    };
-  }, []);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   return (
     <>
       <DetailedCardSheet
         isSaved={true}
-        resourceId={selectedResourceID}
-        onClose={() => setSelectedResourceID(null)}
+        resource={selectedResource}
+        onClose={() => setSelectedResource(null)}
         showPrivacySetting={false}
       />
 
@@ -39,7 +31,7 @@ export const IndexPage = () => {
               key={`resource-${resource?.id ?? index}`}
               resource={resource}
               isSaved={false}
-              onShowDetailedCard={(resource) => setSelectedResourceID(resource.id)}
+              onShowDetailedCard={(resource) => setSelectedResource(resource)}
             />
           ))}
         </div>

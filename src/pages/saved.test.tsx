@@ -6,7 +6,6 @@ import { SAVED_LINK_KEY } from "../core/constants";
 import { Resource } from "../core/entities";
 import { useAuth } from "../hooks/useAuth";
 import { useLinks } from "../hooks/useLinks";
-import { unsaveLink } from "../services/datasource";
 import { SavedPage } from "./saved";
 
 jest.mock("next/router", () => ({
@@ -61,21 +60,18 @@ describe("Saved", () => {
     const oldPostOne = mockedVITResource();
 
     let userLinks_ = [oldPostOne].map(Resource.fromVITResource);
+    const deleteLink = (id: string) => {
+      userLinks_ = userLinks_.filter((link) => link.id !== id);
+
+      Promise.resolve(true);
+    };
 
     (useLinks as jest.Mock)
       .mockImplementation(() => {
-
         return ({
           userLinks: userLinks_,
+          deleteLink,
         });
-      });
-
-    (unsaveLink as jest.Mock)
-      .mockImplementation((id : string) => {
-
-        userLinks_ = userLinks_.filter((link) => link.id !== id);
-
-        Promise.resolve(true);
       });
 
     const { findByTitle, queryByText, rerender } = render(<SavedPage />);

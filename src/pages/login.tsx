@@ -1,15 +1,37 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+import { useLinks } from "../hooks/useLinks";
+import { Resource, User } from "../core/entities";
+import { signIn, upsertUser } from "../services/auth";
 import { CircularLoader } from "../components/Loaders";
 import { showDefaultNotification } from "../components/Notification/Notification";
-import { signIn, upsertUser } from "../services/auth";
-import { migrateLocalData } from "../services/datasource";
 
 export const LoginPage = () => {
   const router = useRouter();
 
+  const { localLinks, deleteLocalLinks, bulkInsertLinks } = useLinks();
+
   const [hasError, setHasError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const initMigrationData = useCallback(async (user : User) => {
+    if (!localLinks.length) return new Error("Local Links is already empty!");
+
+    const resources = localLinks.map((localLink) => Resource.fromJSONResource(localLink));
+
+    const isOk = await bulkInsertLinks(resources, user);
+
+    if (!isOk) throw new Error("Migration failed. Could not be inserted the local saved links.");
+
+    // Clear LocalStorage Links
+    deleteLocalLinks();
+
+    showDefaultNotification(
+      "Migration of local data succeeded!",
+      "Info",
+    );
+  }, [localLinks]);
 
   const onSignInClick = async () => {
     try {
@@ -22,20 +44,14 @@ export const LoginPage = () => {
       // Creates user
       await upsertUser(authenticatedUser);
 
-      // Migrate user data if any
-      if (await migrateLocalData(authenticatedUser)) {
-        showDefaultNotification(
-          "Migration of local data succeeded!",
-          "Info",
-        );
-      }
+      await initMigrationData(authenticatedUser)
 
       setIsLoading(false);
 
       return await router.push("/");
       
     } catch (error) {
-      console.error(`>>> error ${error}`);
+      console.error(`>>> error ${JSON.stringify(error)}`);
       setHasError(error);
     }
 

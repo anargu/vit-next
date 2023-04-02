@@ -1,14 +1,22 @@
-import { render, waitFor } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { LoginPage } from "./login";
 import { upsertUser, signIn } from "../services/auth";
 import { useRouter } from "next/router";
-import { SAVED_LINK_KEY } from "../components/ResourceCard/ResourceCard";
-import { migrateLocalData } from "../services/datasource";
 import { WithNotificationsProvider } from "../components/Notification/Notification";
+import { SAVED_LINK_KEY } from "../core/constants";
+import { Resource, User } from "../core/entities";
+import { useLinks } from "../hooks/useLinks";
+import { mockedVITResource } from "../../__tests__/utils";
 
 console.error = jest.fn();
 
 const SIGN_IN_BUTTON_TEXT = "Sign in with Google";
+
+jest.mock('../hooks/useLinks', () => {
+  return {
+    useLinks: jest.fn(),
+  };
+});
 
 jest.mock('../services/auth', () => {
   return {
@@ -25,7 +33,12 @@ jest.mock('next/router', () => {
 });
 
 describe("Login", () => {
+  (useLinks as jest.Mock).mockImplementation(() => ({
+    localLinks: [],
+  }));
+
   it("renders login page", () => {
+
     const { container } = render(<LoginPage />);
 
     expect(container).toMatchSnapshot();
@@ -43,11 +56,10 @@ describe("Login", () => {
         email: "john@gmail.com",
       });
     });
-
     (upsertUser as jest.Mock).mockReturnValue(() => Promise.resolve(null));
     (useRouter as jest.Mock).mockImplementation(() => ({
       push: jest.fn(),
-    }))
+    }));
 
     const { getByText } = render(<LoginPage />);
 
@@ -129,21 +141,30 @@ describe("Login", () => {
         });
       });
 
-      (migrateLocalData as jest.Mock).mockReturnValue(Promise.reject(Error("it failed")));
+      (useLinks as jest.Mock).mockImplementation(() => ({
+        bulkInsertLinks: () => Promise.resolve(null),
+        localLinks: [Resource.fromVITResource(mockedVITResource())],
+      }));
 
       const { getByText } = render(<LoginPage />);
 
       getByText(SIGN_IN_BUTTON_TEXT).click();
 
       await waitFor(() => {
-        getByText("it failed");
+        getByText("Migration failed. Could not be inserted the local saved links.");
       });
     });
 
     it("shows notification if data migration succeeds", async () => {
       const message = "Migration of local data succeeded!";
 
-      (migrateLocalData as jest.Mock).mockImplementation(() => Promise.resolve(true));
+      (upsertUser as jest.Mock).mockReturnValue(() => Promise.resolve(null));
+
+      (useLinks as jest.Mock).mockImplementation(() => ({
+        bulkInsertLinks: () => Promise.resolve(true),
+        localLinks: [Resource.fromVITResource(mockedVITResource())],
+        deleteLocalLinks: () => {},
+      }));
 
       const { getByText } = render(
         <WithNotificationsProvider>

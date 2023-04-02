@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react'
 import { IndexPage } from "../pages/index";
-import { mockMeiliSearchComponent } from '../components/MeiliSearch.mocks';
 import { useLinks } from '../hooks/useLinks';
 import { mockedVITResource } from '../../__tests__/utils';
 import { Resource } from '../core/entities';
@@ -13,11 +12,6 @@ jest.mock("next/router", () => ({
       pathname: "/",
     };
   },
-}));
-
-jest.mock("../components/MeiliSearch", () => ({
-  __esModule: true,
-  MeiliSearchBar: () => mockMeiliSearchComponent.MeiliSearchBar,
 }));
 
 jest.mock("../hooks/useLinks", () => ({
