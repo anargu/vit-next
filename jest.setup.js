@@ -44,22 +44,21 @@ jest.mock('./src/firebase/index.ts', () => {
   };
 });
 
-jest.mock('./src/services/datasource.ts', () => {
-  return {
-    fetchUser: jest.fn(),
-    listenLinksFromUser: jest.fn(),
-    insertLink: jest.fn(),
-    migrateLocalData: jest.fn(),
-    unsaveLink: jest.fn(),
-  };
-});
-
 jest.mock('./src/services/auth.ts', () => {
   return {
     signIn: jest.fn(),
     upserUser: jest.fn(),
     getSignInResult: jest.fn(),
   };
+});
+
+jest.mock("./src/services/FirestoreStorageStrategy.ts", () => {
+  class DumbStorageStrategy {
+  }
+
+  return ({
+    FirestoreStorageStrategy: DumbStorageStrategy,
+  })
 });
 
 jest.mock("./src/hooks/useAuth", () => {
