@@ -11,7 +11,8 @@ export const event = ({ action, params } : EventGA) => {
   window.gtag('event', action, params)
 };
 
-export const ON_CLICK_SAVE_POST_EVENT = "ON_CLICK_SAVE_POST_EVENT";
+export const ON_CLICK_SAVE_FEED_LINK_EVENT = "ON_CLICK_SAVE_FEED_LINK_EVENT";
+export const ON_CLICK_SAVE_NEW_URL_EVENT = "ON_CLICK_SAVE_NEW_URL_EVENT";
 export const SAVE_POST_SUCESSFULLY_EVENT = "SAVE_POST_SUCESSFULLY_EVENT";
 
 export const ga = {
