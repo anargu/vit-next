@@ -1,11 +1,11 @@
+import { SAVED_LINK_KEY } from "@/src/core/constants";
 import { VITResource } from "@/src/core/entities";
-import { useSavedResources } from "@/src/hooks/useSavedResources";
 import { faker } from "@faker-js/faker";
 import { MantineProvider } from "@mantine/core";
 import { userEvent } from "@storybook/testing-library";
-import { act, findByRole, render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { WithNotificationsProvider } from "../Notification/Notification";
-import { ResourceCard, SAVED_LINK_KEY } from "./ResourceCard";
+import { ResourceCard } from "./ResourceCard";
 
 faker.seed(1);
 

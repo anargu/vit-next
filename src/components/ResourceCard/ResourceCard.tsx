@@ -7,29 +7,32 @@ import Share from "../../../public/assets/share.svg";
 import { showDefaultNotification, showNotification,  } from "../Notification/Notification";
 import { BackgroundImage } from "./BackgroundImage";
 import { useResource } from "@/src/hooks/useResource";
-import { SaveResourceFn } from "@/src/hooks/useSavedResources";
+import { DeleteResourceFn, SaveResourceFn } from "@/src/hooks/useLinks";
 
 export type ResourceCardProps = {
   hit?: VITResource,
   resource?: Resource,
   isSaved?: boolean,
   onSaveResource?: SaveResourceFn,
+  onDeleteResource?: DeleteResourceFn,
   onShowDetailedCard?: (resource : Resource) => void,
 };
 
-export const ResourceCard = ({ hit, resource, onSaveResource, onShowDetailedCard, isSaved } : ResourceCardProps) => {
+export const ResourceCard = ({ hit, resource, onDeleteResource, onSaveResource, onShowDetailedCard, isSaved } : ResourceCardProps) => {
 
   const { share : shareResource } = useResource();
 
   const resourceData = useMemo(() => resource ?? Resource.fromVITResource(hit!), [hit, resource]);
 
   const onSaveClicked = async () => {
-    if (!onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
+    if (!onSaveResource && !onDeleteResource) return showNotification("Error", "Function not available yet.", { color: "red" });
+    if (!isSaved && !onSaveResource) return showNotification("Error", "Function not available yet.", { color: "red" });
+    if (isSaved && !onDeleteResource) return showNotification("Error", "Function not available yet.", { color: "red" });
     
     try {
-      const { isAlreadySaved } = await onSaveResource(resourceData);
+      isSaved ? onDeleteResource?.(resourceData.id!) : onSaveResource?.(resourceData);
 
-      showDefaultNotification(isAlreadySaved ? "Link unsaved." : "Link saved locally.");
+      showDefaultNotification(isSaved ? "Link unsaved." : "Link saved locally.");
       
     } catch (error : any) {
       showNotification(
