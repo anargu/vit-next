@@ -6,12 +6,13 @@ import { DOMAIN_REGEX, SAVED_LINK_KEY } from "../core/constants";
 import { fetchMetadataFromURL } from "../services/metadataService";
 import { JSONResource, LinkPrivacy, Resource } from "../core/entities";
 import { FirestoreStorageStrategy } from "../services/FirestoreStorageStrategy";
-import { ga, ON_CLICK_SAVE_POST_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from "../../lib/ga";
+import { ga, ON_CLICK_SAVE_FEED_LINK_EVENT, ON_CLICK_SAVE_NEW_URL_EVENT, SAVE_POST_SUCESSFULLY_EVENT } from "../../lib/ga";
 
 const firestoreDataManager = new FirestoreStorageStrategy();
 
 export type UpdatePrivacySettingFn = (resourceId : string, privacy : LinkPrivacy) => Promise<void>;
 export type SaveResourceFn = (resource : string | Resource) => Promise<void>;
+export type CloneResourceFn = (resource : Resource) => Promise<void>;
 export type DeleteResourceFn = (resourceId : string) => Promise<void>;
 
 export interface useLinksOptions {
@@ -72,7 +73,7 @@ export function useLinks (opts: useLinksOptions = { listenSavedLinks: false, lis
 
   const insertLink = async (url : string) => {
     try {
-      ga.event({ action: ON_CLICK_SAVE_POST_EVENT, params: {} });
+      ga.event({ action: ON_CLICK_SAVE_NEW_URL_EVENT, params: {} });
 
       // Fetch Metadata of URL string
       let resourceMetadata = await fetchMetadataFromURL(url);
@@ -86,6 +87,31 @@ export function useLinks (opts: useLinksOptions = { listenSavedLinks: false, lis
 
       // Track analytics event
       const domain = url.match(DOMAIN_REGEX)?.[0];
+
+      ga.event({
+        action: SAVE_POST_SUCESSFULLY_EVENT,
+        params: { domain: domain }
+      });
+    } catch (error : any) {
+      console.error(error);
+
+      throw error;
+    }
+  };
+
+  const cloneAndSavePost = async (resource : Resource) => {
+    try {
+      ga.event({ action: ON_CLICK_SAVE_FEED_LINK_EVENT, params: {} });
+
+      if (!isAuthenticated) {
+        throw Error("Operation cannot be done if user is not logged in.");
+      }
+
+      // Save resource and its metadata
+      await firestoreDataManager.cloneIfNonExists(resource, authUser);
+
+      // Track analytics event
+      const domain = resource.url.match(DOMAIN_REGEX)?.[0];
 
       ga.event({
         action: SAVE_POST_SUCESSFULLY_EVENT,
@@ -137,6 +163,8 @@ export function useLinks (opts: useLinksOptions = { listenSavedLinks: false, lis
     feedLinks,
 
     insertLink,
+    cloneAndSavePost,
+
     deleteLink,
     updateLinkPrivacy,
 
