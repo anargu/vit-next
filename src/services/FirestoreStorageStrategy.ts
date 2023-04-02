@@ -1,8 +1,9 @@
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc, Unsubscribe, updateDoc, where } from "firebase/firestore";
+
 import { firestore } from "../firebase";
-import { ResourcesStorageStrategy } from "./DataStorageStrategy";
-import { LinkPrivacy, Resource, User } from "../core/entities";
-import { collection, doc, getDoc, onSnapshot, orderBy, query, setDoc, Unsubscribe, updateDoc, where } from "firebase/firestore";
 import { DataTransformer, Link } from "./entities";
+import { LinkPrivacy, Resource, User } from "../core/entities";
+import { ResourcesStorageStrategy } from "./DataStorageStrategy";
 
 export type OnSnapshotCallback = (resources : Resource[]) => void;
 
@@ -35,7 +36,7 @@ export class FirestoreStorageStrategy extends ResourcesStorageStrategy implement
     delete modifiedData?.id;
 
     /* Save data on DB */
-    const linkDocRef = doc(collection(this.db, `links`))
+    const linkDocRef = doc(collection(this.db, `links`));
 
     // TODO: Transform datetime fields
     await setDoc(linkDocRef, {
@@ -48,6 +49,36 @@ export class FirestoreStorageStrategy extends ResourcesStorageStrategy implement
         email: by.email,
       },
     });
+  }
+
+  // Check if already exists url on saved by user
+  async cloneIfNonExists(data: Resource, by?: User | null): Promise<void> {
+    if (!by) {
+      throw Error("By field is missing: User is not logged in.");
+    }
+
+    // finds a saved link of same url
+    const linksRef = collection(this.db, `links`);
+
+    const queryDocuments = query(linksRef,
+      where("byId", "==", by.id),
+      where("url", "==", data.url),
+      /* where("deleted", "==", false), */
+    );
+
+    const linksSnapshot = await getDocs(queryDocuments);
+
+    if (!linksSnapshot.empty) throw Error("URL duplicate. Link already saved.");
+
+    const linkDocRef = doc(collection(this.db, `links`));
+    
+    const clonedResource = {
+      ...data,
+      id: linkDocRef.id,
+      createdAt: new Date(),
+    } as Resource;
+
+    await this.insert(clonedResource, by);
   }
 
   async updateLinkPrivacy(resourceId: string, privacy: LinkPrivacy): Promise<void> {
