@@ -1,8 +1,9 @@
 import { render } from '@testing-library/react'
+
 import { IndexPage } from "../pages/index";
+import { Resource } from '../core/entities';
 import { useLinks } from '../hooks/useLinks';
 import { mockedVITResource } from '../../__tests__/utils';
-import { Resource } from '../core/entities';
 
 jest.mock("next/router", () => ({
   __esModule: true,
@@ -59,7 +60,6 @@ describe("Home", () => {
         getByText(post.title!)
       });
     });
-
 
     // it("hides title when scrolls down", () => {
     //   const { container, getByText } = render(<IndexPage/>);

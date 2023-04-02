@@ -6,17 +6,18 @@ import { ResourceCard } from '../components/ResourceCard/ResourceCard';
 import { DetailedCardSheet } from '../components/DetailedCard/DetailedCardSheet';
 
 export const IndexPage = () => {
-  const { feedLinks } = useLinks({ listenFeedLinks: true });
+  const { feedLinks, cloneAndSavePost } = useLinks({ listenFeedLinks: true });
 
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   return (
     <>
       <DetailedCardSheet
-        isSaved={true}
-        resource={selectedResource}
-        onClose={() => setSelectedResource(null)}
+        isSaved={false}
         showPrivacySetting={false}
+        resource={selectedResource}
+        onSaveClicked={cloneAndSavePost}
+        onClose={() => setSelectedResource(null)}
       />
 
       <div className="grid grid-rows-[320px_min-content_min-content] min-h-[calc(100vh-72px)]">
@@ -28,14 +29,14 @@ export const IndexPage = () => {
         <div className="px-1 grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {feedLinks?.map((resource, index) => (
             <ResourceCard
-              key={`resource-${resource?.id ?? index}`}
-              resource={resource}
               isSaved={false}
+              onSaveResource={cloneAndSavePost}
+              resource={resource}
+              key={`resource-${resource?.id ?? index}`}
               onShowDetailedCard={(resource) => setSelectedResource(resource)}
             />
           ))}
         </div>
-
       </div>
     </>
   );
