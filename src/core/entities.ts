@@ -19,6 +19,21 @@ export interface VITResource {
   is_public: boolean | null,
 };
 
+export interface JSONResource {
+  id : string | null;
+  createdAt: string;
+  updatedAt: string;
+  postedAt : string;
+  deleted: boolean;
+  isPublic: boolean;
+
+  url: string;
+  imageSrc : string | null;
+  imageAlt : string | null;
+  title : string | null;
+  description : string | null;
+}
+
 export class Resource {
   id : string | null;
   createdAt: Date;
@@ -49,6 +64,10 @@ export class Resource {
     this.description = og_description;
   }
 
+  public set setIsPublic(newValue: boolean) {
+    this.isPublic = newValue;
+  }
+
   get isRegistered() : boolean {
     return this.id !== null;
   };
@@ -57,9 +76,43 @@ export class Resource {
     return new SinceDatetimeField(this.createdAt);
   };
 
-  static fromVITResource (data : VITResource) : Resource {
+  static fromVITResource(data: VITResource) : Resource {
     return new Resource(data);
   };
+
+  static fromJSONResource(data: JSONResource) : Resource {
+    return new Resource({
+      id: data.id ?? undefined,
+      url: data.url,
+      deleted: data.deleted,
+      is_public: data.isPublic,
+      og_image: data.imageSrc,
+      keyphrase: data.imageAlt,
+      date_created: data.createdAt,
+      date_updated: data.updatedAt,
+      og_title: data.title,
+      url_title: data.url,
+      og_description: data.description,
+    })
+  }
+
+  toJSON() : JSONResource {
+    const _resource = {
+      id: this.id,
+      url: this.url,
+      title : this.title,
+      deleted: this.deleted,
+      isPublic: this.isPublic,
+      imageAlt : this.imageAlt,
+      imageSrc : this.imageSrc,
+      description : this.description,
+      postedAt : this.postedAt.toString(),
+      createdAt: this.createdAt.toString(),
+      updatedAt: this.updatedAt.toString(),
+    };
+
+    return _resource;
+  }
 };
 
 export class SinceDatetimeField {
