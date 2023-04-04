@@ -71,7 +71,7 @@ export const SavedPage = () => {
       <DetailedCardSheet
         isSaved={true}
         showPrivacySetting
-        onSaveClicked={deleteLink}
+        onDeleteClicked={deleteLink}
         resource={selectedResource}
         onClose={() => setSelectedResource(null)}
       />

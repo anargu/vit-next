@@ -13,7 +13,8 @@ import { Loader } from "@mantine/core";
 export type DetailedCardProps = {
   resource: Resource,
   isSaved?: boolean,
-  onSaveClicked?: SaveResourceFn | DeleteResourceFn | CloneResourceFn,
+  onSaveClicked?: SaveResourceFn | CloneResourceFn,
+  onDeleteClicked?: DeleteResourceFn,
   showPrivacySetting?: boolean,
 };
 
@@ -32,11 +33,16 @@ export const DetailedCard = (props : DetailedCardProps) => {
   const [resource, setResource] = useState(props.resource);
 
   const onSaveClicked = async () => {
-    if (!props.onSaveClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
+    if (!props.isSaved && !props.onSaveClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
+    if (props.isSaved && !props.onDeleteClicked) return showNotification("Error", "Function not available yet.", { color: "red" });
 
     setIsLoading(true);
     try {
-      await props.onSaveClicked?.(resource.id!);
+      const promiseUpdateResource = props.isSaved
+        ? props.onDeleteClicked?.(resource.id!)
+        : props.onDeleteClicked?.(resource.id!);
+
+      await promiseUpdateResource;
 
       showDefaultNotification(props.isSaved ? "Link unsaved." : "Link saved locally.");
 

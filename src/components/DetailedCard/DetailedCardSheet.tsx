@@ -27,6 +27,7 @@ export const DetailedCardSheet = ({ resource, ...props } : DetailedCardSheetProp
         resource={resource}
         isSaved={props.isSaved}
         onSaveClicked={props.onSaveClicked}
+        onDeleteClicked={props.onDeleteClicked}
         showPrivacySetting={props.showPrivacySetting}
       />)
       : (<div className="bg-white py-10 text-center">
