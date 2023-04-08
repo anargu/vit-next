@@ -49,6 +49,9 @@ export default function VITApp({ Component, pageProps }: AppProps) {
           content={SEO.description}
         />
 
+        <meta property="twitter:card" content={SEO.twitterCard} />
+        <meta property="twitter:creator" content={SEO.twitterCreator} />
+
         <meta
           property="og:image"
           content={SEO.ogImage}
