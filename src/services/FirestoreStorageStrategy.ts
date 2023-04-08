@@ -93,7 +93,6 @@ export class FirestoreStorageStrategy extends ResourcesStorageStrategy implement
     });
 
     if (privacy === LinkPrivacy.PRIVATE) {
-
       await updateDoc(feedDocRef, {
         deleted: true,
         updatedAt: new Date(),

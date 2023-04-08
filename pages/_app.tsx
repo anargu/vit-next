@@ -4,6 +4,7 @@ declare global {
 
 import NavBar from '@/src/components/NavBar';
 import { WithNotificationsProvider } from '@/src/components/Notification/Notification'
+import { SEO } from '@/src/core/constants';
 import '@/styles/global.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -35,6 +36,23 @@ export default function VITApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
+
+        <title>{SEO.titleVITPhrase}</title>
+        <meta
+          name="description"
+          content={SEO.description}
+          key="desc" />
+
+        <meta property="og:title" content={SEO.titleVITPhrase} />
+        <meta
+          property="og:description"
+          content={SEO.description}
+        />
+
+        <meta
+          property="og:image"
+          content={SEO.ogImage}
+        />
       </Head>
 
       <Script

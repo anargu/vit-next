@@ -7,6 +7,8 @@ export const DOMAIN_REGEX = /^(?:\/\/|[^\/]+)*/;
 
 export const SEO = {
   titleVITPhrase: "VIT: Very Interesting Things",
+  description: "The ultimate news aggregator app for tech enthusiasts! Stay up-to-date on the latest trends and news in technology with personalized recommendations based on your interests. Save articles for later reading and access your reading history from any device. Download now and stay informed and productive!",
+  ogImage: "/assets/v_icon_bg_black_512px.png",
 };
 
 export const SAVED_LINK_KEY = "saved_posts";
